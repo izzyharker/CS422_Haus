@@ -193,10 +193,10 @@ def save_chore_rankings(chore_rankings_file, rankings):
 
 
 def main():
-    dwelling_file = 'hauses.csv'
-    occupants_file = 'occupants.csv'
-    chores_file = 'chores.csv'
-    chore_rankings_file = 'chore_rankings.csv'
+    dwelling_file = 'csvs/hauses.csv'
+    occupants_file = 'csvs/occupants.csv'
+    chores_file = 'csvs/chores.csv'
+    chore_rankings_file = 'csvs/chore_rankings.csv'
 
     # Initialize files
     ensure_csv_headers(occupants_file, ['House UID', 'Occupant UID', 'Occupant Name'])
