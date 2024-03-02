@@ -1,4 +1,5 @@
-Unique Key,Occupant Name,Chore ID,Rank
+House UID,Occupant UID,Chore UID,Rank
+
 ddb67e6c-9fcd-4fc7-b0e8-381c5b4871d6,d6e3c2aa-7d7e-46c1-a495-833a3737a8e2,1,1
 ddb67e6c-9fcd-4fc7-b0e8-381c5b4871d6,d6e3c2aa-7d7e-46c1-a495-833a3737a8e2,2,1
 ddb67e6c-9fcd-4fc7-b0e8-381c5b4871d6,d6e3c2aa-7d7e-46c1-a495-833a3737a8e2,3,1
@@ -15,3 +16,4 @@ ddb67e6c-9fcd-4fc7-b0e8-381c5b4871d6,69e1abad-b8a2-4c2a-866f-ef9dafd3686f,5,1
 ddb67e6c-9fcd-4fc7-b0e8-381c5b4871d6,69e1abad-b8a2-4c2a-866f-ef9dafd3686f,6,2
 ddb67e6c-9fcd-4fc7-b0e8-381c5b4871d6,69e1abad-b8a2-4c2a-866f-ef9dafd3686f,7,1
 ddb67e6c-9fcd-4fc7-b0e8-381c5b4871d6,69e1abad-b8a2-4c2a-866f-ef9dafd3686f,8,2
+Unique Key,Occupant Name,Chore ID,Rank
