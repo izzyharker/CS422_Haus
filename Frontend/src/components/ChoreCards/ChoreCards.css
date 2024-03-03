@@ -1,0 +1,39 @@
+.chore-container {
+    display: flex;
+    flex: 7;
+    flex-direction: row;
+    /* border: 2px solid red; */
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    gap: 1em;
+    padding: 2em;
+    justify-content: left;
+}
+
+.chore-list {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.chore-title {
+    flex: 1;
+    padding: 0 2em;
+}
+
+.chore-cards {
+    display: inline-flex;
+    gap: 1em;
+    padding: 2em;
+    flex: 9;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.chore-card {
+    width: 200px;
+    height: 200px;
+    border: 2px solid green;
+    text-align: center;
+    padding-top: 1em;
+}
