@@ -1,0 +1,8 @@
+.haus-content {
+  display: flex;
+  /* border: 2px solid blue; */
+  width: 100vw;
+  height: 100%;
+  top: 0;
+  position: absolute;
+}
