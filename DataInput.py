@@ -199,7 +199,6 @@ def retrieve_occupants_names_and_uids(occupants_file, house_uid):
                 occupants[row[1]] = row[2]
     return occupants
 
-
 def add_or_remove_chores(chores_file):
     """Allows users to add or remove chores from the list."""
     action = input("Do you want to add or remove a chore? (add/remove): ").lower()
