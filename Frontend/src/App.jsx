@@ -2,12 +2,17 @@ import './App.css'
 import "./components/NavBar/NavBar"
 import NavBar from './components/NavBar/NavBar'
 import ChoreContainer from "./components/ChoreCards/ChoreContainer"
+import HouseContainer from "./components/House/HouseContainer"
 
 function App() {
 	return (
-		<div className="haus-content">
+		<div className="haus">
 			< NavBar />
-			<ChoreContainer />
+
+			<div className="haus-content">
+				<ChoreContainer />
+				<HouseContainer />
+			</div>
 		</div>
 	)
 }

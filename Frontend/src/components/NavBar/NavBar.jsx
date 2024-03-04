@@ -1,22 +1,18 @@
 import "./NavBar.css"
 import HelpButton from "./Help"
 import UserProfileButton from "./UserProfile"
-import WebsiteTabs from "./WebsiteTabs"
+import Title from "./Title"
 
 function NavBar() {
     return (
-        <>
-            <div className="dummynav"></div>
-            <div className="navigation">
-                <h1>HAUS</h1>
-                <WebsiteTabs tabs={["House", "Chores"]} />
-            </div>
+        <div className="navigation">
+            <Title title={"HAUS"}/>
             
             <div className="icon-buttons">
                     <HelpButton />
                     <UserProfileButton />
             </div>
-        </>
+        </div>
     );
 }
 

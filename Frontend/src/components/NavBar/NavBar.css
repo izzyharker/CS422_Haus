@@ -2,47 +2,35 @@
     /* border: 2px solid red; */
     background-color: green;
     flex: 1;
-    padding: 1em;
+    padding: 0;
     text-align: center;
-    position: fixed;
+    position: sticky;
     z-index: 1;
     top: 0;
     left: 0;
-    height: 200%;
-    width: 8em;
+    max-height: 5em;
+    width: 100%;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: center;
 }
 
-.dummynav {
-    flex: 1;
-    min-width: 8em;
-}
-
-h1 {
-    padding: 0;
+.app-title {
+    padding-left: 2%;
     margin: 0;
     kerning: auto;
-}
-
-.user-tabs {
-    margin-top: 3em;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5em;
-    justify-content: left;;
+    text-align: left;
+    flex: 1;
+    font-size: 3em;
 }
 
 .icon-buttons {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    z-index: 2;
+    position: relative;
+    height: 50%;
+    padding: 1em;
     display: flex;
     gap: 0.5em;
-    flex-direction: column;
-    /* border: 2px solid white; */
-    padding: 0.5em;
+    flex-direction: row;
 }
 
 .icon-buttons * {
