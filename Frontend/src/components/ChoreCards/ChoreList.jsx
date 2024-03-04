@@ -11,10 +11,11 @@ function ChoreList(props) {
         <div className={(props.myChores ? "chore-title my-chores" : "chore-title house-chores")}>
             <h1>{which_chores} chores</h1>
         </div>
-        <div className={(props.myChores ? "chore-cards my-chores" : "chore-cards house-chores")}>
+        {props.chores &&
+        (<div className={(props.myChores ? "chore-cards my-chores" : "chore-cards house-chores")}>
             {props.chores.map((chore) => 
-                <ChoreCard key={chore} whichChore={chore} />)}
-        </div>
+                <ChoreCard key={chore["Chore ID"]} chore={chore} />)}
+        </div>)}
     </div>
     )
 }
