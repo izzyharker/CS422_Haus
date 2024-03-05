@@ -1,10 +1,10 @@
-Chore ID,Chore Name,Description
-1,Dishes,Wash and dry the dishes
-2,Laundry,"Wash, dry, and fold clothes"
-3,Vacuum,Vacuum all carpets and rugs
-4,Dusting,Dust all surfaces
-5,Trash,Take out the trash and recycling
-6,Bathroom,Clean the toilets and showers
-7,Sweeping,Sweep floors
-8,Mopping,Mop floors
-f531f0ec-b674-4356-a1d6-d1ee34ddf3d8,Bing Bong,Bing BONG,BONG,5
+Chore ID,Chore Name,Description,Category,Expected Duration,Status,Assignee ID,Deadline Date,Completion Date
+f79759a1-47ef-42c4-9879-c353c3329f50,Dishes,Wash and dry the dishes,Kitchen,15,unassigned,,,
+b2c10fdc-f023-4360-9bf6-d62122333039,Dishes,Wash and dry the dishes,Kitchen,15,unassigned,,,
+9e4fe3a0-aa47-40e0-9efd-eb4f62c5f922,Laundry,"Wash, dry, and fold clothes",General,20,unassigned,,,
+7cb263c2-52f5-4077-971e-491d3d19ed29,Vacuum,Vacuum all carpets and rugs,General,30,unassigned,,,
+575e2770-e278-4dc5-95a3-e918ecebdc31,Dusting,Dust all surfaces,General,20,unassigned,,,
+7eb8d2e8-998a-4852-990b-13082cbdffa7,Trash,Take out the trash and recycling,General,5,unassigned,,,
+704ac7ef-5c08-487e-b225-a1b682846bbe,Bathroom,Clean the toilets and showers,Bathroom,35,unassigned,,,
+10d0cf60-5510-485c-8745-0ef7eeb4e928,Sweeping,Sweep floors,Floors,20,unassigned,,,
+0bbcc270-ac38-4bea-9b24-e09e9e56aef8,Mopping,Mop floors,Floors,20,unassigned,,,

@@ -1,51 +1,101 @@
 [
     {
-        "Chore ID": "1",
+        "Chore ID": "f79759a1-47ef-42c4-9879-c353c3329f50",
         "Chore Name": "Dishes",
-        "Description": "Wash and dry the dishes"
+        "Description": "Wash and dry the dishes",
+        "Category": "Kitchen",
+        "Expected Duration": "15",
+        "Status": "unassigned",
+        "Assignee ID": "",
+        "Deadline Date": "",
+        "Completion Date": ""
     },
     {
-        "Chore ID": "2",
+        "Chore ID": "b2c10fdc-f023-4360-9bf6-d62122333039",
+        "Chore Name": "Dishes",
+        "Description": "Wash and dry the dishes",
+        "Category": "Kitchen",
+        "Expected Duration": "15",
+        "Status": "unassigned",
+        "Assignee ID": "",
+        "Deadline Date": "",
+        "Completion Date": ""
+    },
+    {
+        "Chore ID": "9e4fe3a0-aa47-40e0-9efd-eb4f62c5f922",
         "Chore Name": "Laundry",
-        "Description": "Wash, dry, and fold clothes"
+        "Description": "Wash, dry, and fold clothes",
+        "Category": "General",
+        "Expected Duration": "20",
+        "Status": "unassigned",
+        "Assignee ID": "",
+        "Deadline Date": "",
+        "Completion Date": ""
     },
     {
-        "Chore ID": "3",
+        "Chore ID": "7cb263c2-52f5-4077-971e-491d3d19ed29",
         "Chore Name": "Vacuum",
-        "Description": "Vacuum all carpets and rugs"
+        "Description": "Vacuum all carpets and rugs",
+        "Category": "General",
+        "Expected Duration": "30",
+        "Status": "unassigned",
+        "Assignee ID": "",
+        "Deadline Date": "",
+        "Completion Date": ""
     },
     {
-        "Chore ID": "4",
+        "Chore ID": "575e2770-e278-4dc5-95a3-e918ecebdc31",
         "Chore Name": "Dusting",
-        "Description": "Dust all surfaces"
+        "Description": "Dust all surfaces",
+        "Category": "General",
+        "Expected Duration": "20",
+        "Status": "unassigned",
+        "Assignee ID": "",
+        "Deadline Date": "",
+        "Completion Date": ""
     },
     {
-        "Chore ID": "5",
+        "Chore ID": "7eb8d2e8-998a-4852-990b-13082cbdffa7",
         "Chore Name": "Trash",
-        "Description": "Take out the trash and recycling"
+        "Description": "Take out the trash and recycling",
+        "Category": "General",
+        "Expected Duration": "5",
+        "Status": "unassigned",
+        "Assignee ID": "",
+        "Deadline Date": "",
+        "Completion Date": ""
     },
     {
-        "Chore ID": "6",
+        "Chore ID": "704ac7ef-5c08-487e-b225-a1b682846bbe",
         "Chore Name": "Bathroom",
-        "Description": "Clean the toilets and showers"
+        "Description": "Clean the toilets and showers",
+        "Category": "Bathroom",
+        "Expected Duration": "35",
+        "Status": "unassigned",
+        "Assignee ID": "",
+        "Deadline Date": "",
+        "Completion Date": ""
     },
     {
-        "Chore ID": "7",
+        "Chore ID": "10d0cf60-5510-485c-8745-0ef7eeb4e928",
         "Chore Name": "Sweeping",
-        "Description": "Sweep floors"
+        "Description": "Sweep floors",
+        "Category": "Floors",
+        "Expected Duration": "20",
+        "Status": "unassigned",
+        "Assignee ID": "",
+        "Deadline Date": "",
+        "Completion Date": ""
     },
     {
-        "Chore ID": "8",
+        "Chore ID": "0bbcc270-ac38-4bea-9b24-e09e9e56aef8",
         "Chore Name": "Mopping",
-        "Description": "Mop floors"
-    },
-    {
-        "Chore ID": "f531f0ec-b674-4356-a1d6-d1ee34ddf3d8",
-        "Chore Name": "Bing Bong",
-        "Description": "Bing BONG",
-        "null": [
-            "BONG",
-            "5"
-        ]
+        "Description": "Mop floors",
+        "Category": "Floors",
+        "Expected Duration": "20",
+        "Status": "unassigned",
+        "Assignee ID": "",
+        "Deadline Date": "",
+        "Completion Date": ""
     }
 ]
