@@ -97,5 +97,16 @@
         "Assignee ID": "",
         "Deadline Date": "",
         "Completion Date": ""
+    },
+    {
+        "Chore ID": "7b02ea40-775f-4050-9113-2411442fc9ba",
+        "Chore Name": "Bing Bong",
+        "Description": "Bong",
+        "Category": "Bathroom",
+        "Expected Duration": "15",
+        "Status": "unassigned",
+        "Assignee ID": "",
+        "Deadline Date": "",
+        "Completion Date": ""
     }
 ]
