@@ -68,7 +68,8 @@
     flex: 1;
     display: flex;
 
-    max-height: 10%;
+    padding-top: 5%;
+    max-height: 5%;
     justify-content: left;
     align-items: center;
     /* border: 2px solid red; */

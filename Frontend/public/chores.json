@@ -1,0 +1,51 @@
+[
+    {
+        "Chore ID": "1",
+        "Chore Name": "Dishes",
+        "Description": "Wash and dry the dishes"
+    },
+    {
+        "Chore ID": "2",
+        "Chore Name": "Laundry",
+        "Description": "Wash, dry, and fold clothes"
+    },
+    {
+        "Chore ID": "3",
+        "Chore Name": "Vacuum",
+        "Description": "Vacuum all carpets and rugs"
+    },
+    {
+        "Chore ID": "4",
+        "Chore Name": "Dusting",
+        "Description": "Dust all surfaces"
+    },
+    {
+        "Chore ID": "5",
+        "Chore Name": "Trash",
+        "Description": "Take out the trash and recycling"
+    },
+    {
+        "Chore ID": "6",
+        "Chore Name": "Bathroom",
+        "Description": "Clean the toilets and showers"
+    },
+    {
+        "Chore ID": "7",
+        "Chore Name": "Sweeping",
+        "Description": "Sweep floors"
+    },
+    {
+        "Chore ID": "8",
+        "Chore Name": "Mopping",
+        "Description": "Mop floors"
+    },
+    {
+        "Chore ID": "f531f0ec-b674-4356-a1d6-d1ee34ddf3d8",
+        "Chore Name": "Bing Bong",
+        "Description": "Bing BONG",
+        "null": [
+            "BONG",
+            "5"
+        ]
+    }
+]
