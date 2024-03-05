@@ -1,10 +1,21 @@
-import House from "./HouseDetails"
 import "./HouseContainer.css"
+import { useState, useEffect } from 'react';
+import HouseDetails from "./HouseDetails"
 
 function HouseContainer(props) {
+    const [data, setData] = useState([]);
+
+    useEffect(() => {
+        fetch('/users.json')
+        .then((res) => res.json())
+        .then((data) => {
+            setData(data);
+        });
+    }, []);
+
     return (
         <div className="house">
-            <House />
+            <HouseDetails houseName="House #1" houseData={data}/>
         </div>
     )
 }

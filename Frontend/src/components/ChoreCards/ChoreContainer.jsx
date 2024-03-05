@@ -14,12 +14,10 @@ function ChoreContainer() {
         });
     }, []);
 
-    // console.log("data: ", data)
-
     return (
         <div className="chore-container">
             <ChoreList myChores={true} chores={data}/>
-            <ChoreList myChores={false} chores={null}/>
+            {/* <ChoreL ist myChores={false} chores={null}/> */}
         </div>
     )
 }
