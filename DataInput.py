@@ -14,6 +14,8 @@ import json
 import csv
 import uuid
 from enum import Enum
+from datetime import datetime
+from typing import Union
 
 # Constant definitions
 
@@ -28,12 +30,63 @@ CHORE_ATTRIBUTES = ['Chore ID',
                     'Deadline Date',
                     'Completion Date']
 
-
 # Symbolic constants for chore statuses
 class CHORE_STATUS(Enum):
     UNASSIGNED = "unassigned"
     ASSIGNED = "assigned"
     COMPLETED = "completed"
+
+# Chore CSV file location
+CHORES_FILEPATH = 'csvs/chores.csv'
+
+# date format to be used in all CSVs
+DATE_FORMAT = '%Y-%m-%d'
+
+class Chore:
+    """
+    Class representing a chore.
+    This class simplifies working with chores and their attributes on the server-side.
+    Please note: Chore objects must be converted to JSON when interacting with frontent.
+    """
+    name: str
+    id: str
+    description: str
+    category: str
+    expected_duration: int
+    status: CHORE_STATUS
+    assignee_id: Union[str, None]
+    deadline_date: Union[datetime, None]
+    completion_date: Union[datetime, None]
+
+    def __init__(self, csv_chore_row: dict):
+        """
+        Constructor to create a Chore object based on a dict from a chore CSV row
+        """
+        self.name = csv_chore_row["Chore Name"]
+        self.id = csv_chore_row["Chore ID"]
+        self.description = csv_chore_row["Description"]
+        self.category = csv_chore_row["Category"]
+        self.expected_duration = csv_chore_row["Expected Duration"]
+        self.status = CHORE_STATUS(csv_chore_row["Status"])
+        self.assignee_id = csv_chore_row["Assignee ID"]
+        self.deadline_date = datetime.strptime(csv_chore_row["Deadline Date"], DATE_FORMAT) \
+            if csv_chore_row["Deadline Date"] else None
+        self.completion_date = datetime.strptime(csv_chore_row["Completion Date"], DATE_FORMAT) \
+            if csv_chore_row["Completion Date"] else None
+
+    def __str__(self):
+        """Return a string representation of every aspect of the chore"""
+        return f"""
+        Name: {self.name}
+        ID: {self.id}
+        Description: {self.description}
+        Category: {self.category}
+        Expected Duration: {self.expected_duration}
+        Status: {self.status.value}
+        Assignee ID: {self.assignee_id}
+        Deadline Date: {self.deadline_date}
+        Completion Date: {self.completion_date}
+        """
 
 
 def convert_csv_to_json(csv_filename, json_filename):
@@ -158,13 +211,24 @@ def save_occupant_names(filename, house_uid, occupant_uid, occupant_name):
 
 def initialize_chores(chores_file):
     default_chores = [
-        (generate_uid(), "Dishes", "Wash and dry the dishes", "Kitchen", "15", CHORE_STATUS.UNASSIGNED.value, None, None, None),
-        (generate_uid(), "Dishes", "Wash and dry the dishes", "Kitchen", "15", CHORE_STATUS.UNASSIGNED.value, None, None, None),
-        (generate_uid(), "Laundry", "Wash, dry, and fold clothes", "General", "20", CHORE_STATUS.UNASSIGNED.value, None, None, None),
-        (generate_uid(), "Vacuum", "Vacuum all carpets and rugs", "General", "30", CHORE_STATUS.UNASSIGNED.value, None, None, None),
-        (generate_uid(), "Dusting", "Dust all surfaces", "General", "20", CHORE_STATUS.UNASSIGNED.value, None, None, None),
-        (generate_uid(), "Trash", "Take out the trash and recycling", "General", "5", CHORE_STATUS.UNASSIGNED.value, None, None, None),
-        (generate_uid(), "Bathroom", "Clean the toilets and showers", "Bathroom", "35", CHORE_STATUS.UNASSIGNED.value, None, None, None),
+        (
+            generate_uid(), "Dishes", "Wash and dry the dishes", "Kitchen", "15", CHORE_STATUS.UNASSIGNED.value, None,
+            None,
+            None),
+        (
+            generate_uid(), "Dishes", "Wash and dry the dishes", "Kitchen", "15", CHORE_STATUS.UNASSIGNED.value, None,
+            None,
+            None),
+        (generate_uid(), "Laundry", "Wash, dry, and fold clothes", "General", "20", CHORE_STATUS.UNASSIGNED.value, None,
+         None, None),
+        (generate_uid(), "Vacuum", "Vacuum all carpets and rugs", "General", "30", CHORE_STATUS.UNASSIGNED.value, None,
+         None, None),
+        (generate_uid(), "Dusting", "Dust all surfaces", "General", "20", CHORE_STATUS.UNASSIGNED.value, None, None,
+         None),
+        (generate_uid(), "Trash", "Take out the trash and recycling", "General", "5", CHORE_STATUS.UNASSIGNED.value,
+         None, None, None),
+        (generate_uid(), "Bathroom", "Clean the toilets and showers", "Bathroom", "35", CHORE_STATUS.UNASSIGNED.value,
+         None, None, None),
         (generate_uid(), "Sweeping", "Sweep floors", "Floors", "20", CHORE_STATUS.UNASSIGNED.value, None, None, None),
         (generate_uid(), "Mopping", "Mop floors", "Floors", "20", CHORE_STATUS.UNASSIGNED.value, None, None, None)
     ]
@@ -244,7 +308,9 @@ def add_chore(chores_file):
 
     with open(chores_file, mode='a', newline='') as file:
         writer = csv.writer(file)
-        writer.writerow([chore_id, chore_name, description, category, expected_duration, CHORE_STATUS.UNASSIGNED.value, None, None, None])
+        writer.writerow(
+            [chore_id, chore_name, description, category, expected_duration, CHORE_STATUS.UNASSIGNED.value, None, None,
+             None])
 
     print(f"Chore '{chore_name}' added successfully.")
 
@@ -290,7 +356,61 @@ def save_chore_rankings(chore_rankings_file, rankings):
         for ranking in rankings:
             writer.writerow(ranking)
 
+# getter functions, for user by other modules importing this one
 
+def get_chore_by_id(id: str):
+    """Return a Chore object from database by id"""
+    # first find the chore in the CSV database by id
+    found_csv_row = None
+    file = open(CHORES_FILEPATH, 'r')
+    reader = csv.DictReader(file)
+    for row in reader:
+        if row['Chore ID'] == id:
+            found_csv_row = row
+            break
+    if not found_csv_row:
+        return None
+    # create a chore object from the row
+    chore = Chore(found_csv_row)
+    return chore
+
+def get_chores_by_filters(assignee_id: str = None,
+               min_completion_date: datetime = None,
+               max_deadline_date : datetime = None) -> list[Chore]:
+    """
+    Return a list of Chore objects matching the given filters.
+    The list will be empty if none of the chores in the database match.
+    """
+    matching_chores = []
+    file = open(CHORES_FILEPATH, 'r')
+    reader = csv.DictReader(file)
+    for row in reader:
+        if assignee_id and row["Assignee ID"] != assignee_id:
+            continue
+        if min_completion_date and row["Completion Date"] < min_completion_date:
+            continue
+        if max_deadline_date and row["Deadline Date"] > max_deadline_date:
+            continue
+        matching_chores.append(Chore(row))
+    file.close()
+    return matching_chores
+
+def get_user_category_preferences(user_id: str) -> list[tuple[str, int]]:
+    """
+    Return a list of (category, preference) tuples for the given user_id.
+    The preferences can be 0 (negative), 1 (neutral), or 2 (positive).
+    """
+    file = open('csvs/chore_rankings.csv', 'r')
+    reader = csv.DictReader(file)
+    preferences = []
+    for row in reader:
+        if row["Occupant UID"] == user_id:
+            # TODO implement rankings based on category and not chore ID, and change "ranking" -> "preference"
+            preferences.append((row["Chore UID"], row["Rank"]))
+    file.close()
+    return preferences
+
+# TODO remove this once frontend works
 def main():
     dwelling_file = 'csvs/hauses.csv'
     occupants_file = 'csvs/occupants.csv'
@@ -343,5 +463,7 @@ def main():
             print("Invalid selection. Please choose again.")
 
 
+
 if __name__ == "__main__":
+    # FIXME this should be removed once frontend works, this should only be imported as a module
     main()
