@@ -1,5 +1,7 @@
 import "./HouseContainer.css"
 import HouseOccupant from "./HouseOccupant"
+import AddChore from "./AddChore"
+import AddUser from "./AddUser"
 
 function HouseDetails(props) {
     // console.log(props.houseData)
@@ -12,7 +14,10 @@ function HouseDetails(props) {
             (<div className="house-occupants">
                 {props.houseData.map((user) => 
                     <HouseOccupant key={user["UserID"]} username={user["name"]} />)}
+
             </div>)}
+            <AddChore />
+            <AddUser />
         </div>
     )
 }

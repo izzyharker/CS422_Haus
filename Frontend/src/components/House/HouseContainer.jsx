@@ -1,6 +1,7 @@
 import "./HouseContainer.css"
 import { useState, useEffect } from 'react';
 import HouseDetails from "./HouseDetails"
+import AddChore from "./AddChore"
 
 function HouseContainer(props) {
     const [data, setData] = useState([]);

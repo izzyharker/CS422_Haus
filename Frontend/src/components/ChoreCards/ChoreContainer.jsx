@@ -17,7 +17,7 @@ function ChoreContainer() {
     return (
         <div className="chore-container">
             <ChoreList myChores={true} chores={data}/>
-            {/* <ChoreL ist myChores={false} chores={null}/> */}
+            {/* <ChoreList myChores={false} chores={null}/> */}
         </div>
     )
 }

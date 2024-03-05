@@ -15,6 +15,7 @@ function ChoreList(props) {
         (<div className={(props.myChores ? "chore-cards my-chores" : "chore-cards house-chores")}>
             {props.chores.map((chore) => 
                 <ChoreCard key={chore["Chore ID"]} chore={chore} />)}
+            {/* <AddChore /> */}
         </div>)}
     </div>
     )
