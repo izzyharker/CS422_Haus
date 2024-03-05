@@ -292,20 +292,16 @@ def save_chore_rankings(chore_rankings_file, rankings):
 
 
 def main():
-    dwelling_file = 'csvs/hauses.csv'
     occupants_file = 'csvs/occupants.csv'
     chores_file = 'csvs/chores.csv'
     chore_rankings_file = 'csvs/chore_rankings.csv'
 
     # Initialize files
-    ensure_csv_headers(dwelling_file, ['House UID', 'House Name', 'House Type', 'Num Occupants'])
-    ensure_csv_headers(occupants_file, ['House UID', 'Occupant UID', 'Occupant Name'])
-    ensure_csv_headers(chore_rankings_file, ['House UID', 'Occupant UID', 'Chore UID', 'Rank'])
+    ensure_csv_headers(occupants_file, ['Occupant UID', 'Occupant Name'])
+    ensure_csv_headers(chore_rankings_file, ['Occupant UID', 'Chore UID', 'Rank'])
     initialize_chores(chores_file)
     ensure_csv_headers(chores_file, CHORE_ATTRIBUTES)
 
-    # Convert 'hauses.csv' to 'hauses.json'
-    convert_csv_to_json('csvs/hauses.csv', 'jsons/hauses.json')
     # Convert 'occupants.csv' to 'occupants.json'
     convert_csv_to_json('csvs/occupants.csv', 'jsons/occupants.json')
     # Convert 'chores.csv' to 'chores.json'
@@ -316,20 +312,13 @@ def main():
     # Main menu loop
     while True:
         print("\nMenu:")
-        print("1. Add a new Haus")
         print("2. Add occupants to an existing Haus")
         print("3. Rank chores for a Haus")
         print("4. Add or remove a chore")
         print("5. Exit")
         choice = input("Select an option (1/2/3/4/5): ")
 
-        if choice == '1':
-            name, dwelling_type, num_people = get_haus_info()
-            unique_key = generate_uid()
-            append_to_csv(dwelling_file, [unique_key, name, dwelling_type, num_people])
-            print(f"New Haus added with unique key: {unique_key}")
-            break
-        elif choice == '2':
+        if choice == '2':
             add_occupant_names(dwelling_file, occupants_file)
         elif choice == '3':
             rank_chores(occupants_file, chores_file, chore_rankings_file)
