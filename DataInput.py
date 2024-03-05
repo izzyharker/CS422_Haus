@@ -1,5 +1,5 @@
 """
-Author: Carter Young
+Author: Carter Young, Alex JPS
 Date: 02/24/24
 
 This file represents the data input module. It also enables all data input to be stored in the appropriate file type.
@@ -13,6 +13,27 @@ Outputs:
 import json
 import csv
 import uuid
+from enum import Enum
+
+# Constant definitions
+
+# Attributes which every chore must have, coincides with names in line 1 of chores.csv
+CHORE_ATTRIBUTES = ['Chore ID',
+                    'Chore Name',
+                    'Description',
+                    'Category',
+                    'Expected Duration',
+                    'Status',
+                    'Assignee ID',
+                    'Deadline Date',
+                    'Completion Date']
+
+
+# Symbolic constants for chore statuses
+class CHORE_STATUS(Enum):
+    UNASSIGNED = "unassigned"
+    ASSIGNED = "assigned"
+    COMPLETED = "completed"
 
 
 def convert_csv_to_json(csv_filename, json_filename):
@@ -30,9 +51,10 @@ def convert_csv_to_json(csv_filename, json_filename):
             data.append(row)
 
     # Open JSON to write
-    with open (json_filename, 'w', newline='') as json_file:
+    with open(json_filename, 'w', newline='') as json_file:
         # Write and pp
         json.dump(data, json_file, indent=4)
+
 
 def generate_uid():
     """ This function generates a unique key for a Haus. """
@@ -94,7 +116,7 @@ def get_haus_info():
     # Ensure num_people is assigned a value before it's used or returned.
     while True:
         num_people = input("Enter the number of people living there: ")
-        if num_people in ['1','2','3','4','5','6','7','8','9','10']:
+        if num_people in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
             break
         else:
             print("Invalid Quantity. Please enter an int.")
@@ -136,14 +158,15 @@ def save_occupant_names(filename, house_uid, occupant_uid, occupant_name):
 
 def initialize_chores(chores_file):
     default_chores = [
-        (1, "Dishes", "Wash and dry the dishes", "Kitchen", "15"),
-        (2, "Laundry", "Wash, dry, and fold clothes", "General", "20"),
-        (3, "Vacuum", "Vacuum all carpets and rugs", "General", "30"),
-        (4, "Dusting", "Dust all surfaces", "General", "20"),
-        (5, "Trash", "Take out the trash and recycling", "General", "5"),
-        (6, "Bathroom", "Clean the toilets and showers", "Bathroom", "35"),
-        (7, "Sweeping", "Sweep floors", "Floors", "20"),
-        (8, "Mopping", "Mop floors", "Floors", "20")
+        (generate_uid(), "Dishes", "Wash and dry the dishes", "Kitchen", "15", CHORE_STATUS.UNASSIGNED.value, None, None, None),
+        (generate_uid(), "Dishes", "Wash and dry the dishes", "Kitchen", "15", CHORE_STATUS.UNASSIGNED.value, None, None, None),
+        (generate_uid(), "Laundry", "Wash, dry, and fold clothes", "General", "20", CHORE_STATUS.UNASSIGNED.value, None, None, None),
+        (generate_uid(), "Vacuum", "Vacuum all carpets and rugs", "General", "30", CHORE_STATUS.UNASSIGNED.value, None, None, None),
+        (generate_uid(), "Dusting", "Dust all surfaces", "General", "20", CHORE_STATUS.UNASSIGNED.value, None, None, None),
+        (generate_uid(), "Trash", "Take out the trash and recycling", "General", "5", CHORE_STATUS.UNASSIGNED.value, None, None, None),
+        (generate_uid(), "Bathroom", "Clean the toilets and showers", "Bathroom", "35", CHORE_STATUS.UNASSIGNED.value, None, None, None),
+        (generate_uid(), "Sweeping", "Sweep floors", "Floors", "20", CHORE_STATUS.UNASSIGNED.value, None, None, None),
+        (generate_uid(), "Mopping", "Mop floors", "Floors", "20", CHORE_STATUS.UNASSIGNED.value, None, None, None)
     ]
     try:
         with open(chores_file, 'r') as file:
@@ -151,7 +174,7 @@ def initialize_chores(chores_file):
     except FileNotFoundError:
         with open(chores_file, 'w', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow(['Chore ID', 'Chore Name', 'Description', 'Category', 'Time'])
+            writer.writerow(CHORE_ATTRIBUTES)
             for chore in default_chores:
                 writer.writerow(chore)
 
@@ -216,12 +239,12 @@ def add_chore(chores_file):
     chore_name = input("Enter the name of the chore: ")
     description = input("Enter the chore description: ")
     category = input("Enter the chore category: ")
-    time = input("Enter the estimated time to complete the chore (in minutes): ")
+    expected_duration = input("Enter the estimated time to complete the chore (in minutes): ")
     chore_id = generate_uid()  # Using UUID for unique chore identifiers
 
     with open(chores_file, mode='a', newline='') as file:
         writer = csv.writer(file)
-        writer.writerow([chore_id, chore_name, description, category, time])
+        writer.writerow([chore_id, chore_name, description, category, expected_duration, CHORE_STATUS.UNASSIGNED.value, None, None, None])
 
     print(f"Chore '{chore_name}' added successfully.")
 
@@ -279,6 +302,7 @@ def main():
     ensure_csv_headers(occupants_file, ['House UID', 'Occupant UID', 'Occupant Name'])
     ensure_csv_headers(chore_rankings_file, ['House UID', 'Occupant UID', 'Chore UID', 'Rank'])
     initialize_chores(chores_file)
+    ensure_csv_headers(chores_file, CHORE_ATTRIBUTES)
 
     # Convert 'hauses.csv' to 'hauses.json'
     convert_csv_to_json('csvs/hauses.csv', 'jsons/hauses.json')
