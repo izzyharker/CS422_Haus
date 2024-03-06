@@ -1,8 +1,18 @@
-# React + Vite
+# Instructions for setting up and running frontend 
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+1. Install nvm, use instructions from https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating
+2. Install node and npm (installing node should automatically install npm I think)
+3. cd to the Frontend directory
+4. To start the local server with React, run:
+```
+npm install
+npm run dev
+```
+You should get this series of lines:
+  VITE v5.1.x  ready in xxx ms
 
-Currently, two official plugins are available:
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+  ➜  press h + enter to show help
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Click on the link to open the website in your browser. (the port may be different, but Vite is usually 5173)
