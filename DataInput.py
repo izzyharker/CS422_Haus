@@ -13,8 +13,8 @@ Outputs:
 import json
 import csv
 import uuid
+from datetime import datetime, date
 from enum import Enum
-from datetime import datetime
 from typing import Union
 
 # Constant definitions
@@ -55,8 +55,8 @@ class Chore:
     expected_duration: int
     status: CHORE_STATUS
     assignee_id: Union[str, None]
-    deadline_date: Union[datetime, None]
-    completion_date: Union[datetime, None]
+    deadline_date: Union[date, None]
+    completion_date: Union[date, None]
 
     def __init__(self, csv_chore_row: dict):
         """
@@ -66,12 +66,12 @@ class Chore:
         self.id = csv_chore_row["Chore ID"]
         self.description = csv_chore_row["Description"]
         self.category = csv_chore_row["Category"]
-        self.expected_duration = csv_chore_row["Expected Duration"]
+        self.expected_duration = int(csv_chore_row["Expected Duration"])
         self.status = CHORE_STATUS(csv_chore_row["Status"])
         self.assignee_id = csv_chore_row["Assignee ID"]
-        self.deadline_date = datetime.strptime(csv_chore_row["Deadline Date"], DATE_FORMAT) \
+        self.deadline_date = datetime.strptime(csv_chore_row["Deadline Date"], DATE_FORMAT).date() \
             if csv_chore_row["Deadline Date"] else None
-        self.completion_date = datetime.strptime(csv_chore_row["Completion Date"], DATE_FORMAT) \
+        self.completion_date = datetime.strptime(csv_chore_row["Completion Date"], DATE_FORMAT).date() \
             if csv_chore_row["Completion Date"] else None
 
     def __str__(self):
@@ -386,8 +386,9 @@ def get_chore_by_id(id: str):
     return chore
 
 def get_chores_by_filters(assignee_id: str = None,
-               min_completion_date: datetime = None,
-               max_deadline_date : datetime = None) -> list[Chore]:
+               status: CHORE_STATUS = None,
+               min_deadline_date: date = None,
+               max_deadline_date : date = None) -> list[Chore]:
     """
     Return a list of Chore objects matching the given filters.
     The list will be empty if none of the chores in the database match.
@@ -396,30 +397,78 @@ def get_chores_by_filters(assignee_id: str = None,
     file = open(CHORES_FILEPATH, 'r')
     reader = csv.DictReader(file)
     for row in reader:
-        if assignee_id and row["Assignee ID"] != assignee_id:
+        chore = Chore(row)
+        if status and chore.status != status:
             continue
-        if min_completion_date and row["Completion Date"] < min_completion_date:
+        if assignee_id and chore.assignee_id != assignee_id:
             continue
-        if max_deadline_date and row["Deadline Date"] > max_deadline_date:
+        if min_deadline_date and (not chore.deadline_date or chore.deadline_date < min_deadline_date):
+            continue
+        if max_deadline_date and (not chore.deadline_date or chore.deadline_date > max_deadline_date):
             continue
         matching_chores.append(Chore(row))
     file.close()
     return matching_chores
 
-def get_user_category_preferences(user_id: str) -> list[tuple[str, int]]:
+def get_user_ids() -> list[str]:
     """
-    Return a list of (category, preference) tuples for the given user_id.
-    The preferences can be 0 (negative), 1 (neutral), or 2 (positive).
+    Return a list of all user IDs in the database.
     """
-    file = open('csvs/chore_rankings.csv', 'r')
+    file = open('csvs/occupants.csv', 'r')
     reader = csv.DictReader(file)
-    preferences = []
+    user_ids = []
     for row in reader:
-        if row["Occupant UID"] == user_id:
-            # TODO implement rankings based on category and not chore ID, and change "ranking" -> "preference"
-            preferences.append((row["Chore UID"], row["Rank"]))
+        user_ids.append(row["Occupant UID"])
     file.close()
-    return preferences
+    return user_ids
+
+def update_chore(chore: Chore) -> None:
+    """
+    Given a Chore object, update the CSV database entry to match object's attributes.
+    If the chore does not exist (no ID or ID not in CSV database), throw error.
+    """
+    # find the chore in the CSV database by id
+    file = open(CHORES_FILEPATH, 'r')
+    reader = csv.DictReader(file)
+    lines = list(reader)
+    for line in lines:
+        if line["Chore ID"] == chore.id:
+            # update the line with the new chore attributes
+            line["Chore Name"] = chore.name
+            line["Description"] = chore.description
+            line["Category"] = chore.category
+            line["Expected Duration"] = chore.expected_duration
+            line["Status"] = chore.status.value
+            line["Assignee ID"] = chore.assignee_id
+            line["Deadline Date"] = chore.deadline_date.strftime(DATE_FORMAT) \
+                if chore.deadline_date else ""
+            line["Completion Date"] = chore.completion_date.strftime(DATE_FORMAT) \
+                if chore.completion_date else ""
+            break
+    file.close()
+    # write everything back to the file
+    file = open(CHORES_FILEPATH, 'w', newline='')
+    writer = csv.DictWriter(file, fieldnames=CHORE_ATTRIBUTES)
+    writer.writeheader()
+    writer.writerows(lines)
+    file.close()
+
+
+# FIXME We are not using category preferences for now, either remove or reinstate later in development
+# def get_user_category_preferences(user_id: str) -> list[tuple[str, int]]:
+#     """
+#     Return a list of (category, preference) tuples for the given user_id.
+#     The preferences can be 0 (negative), 1 (neutral), or 2 (positive).
+#     """
+#     file = open('csvs/chore_rankings.csv', 'r')
+#     reader = csv.DictReader(file)
+#     preferences = []
+#     for row in reader:
+#         if row["Occupant UID"] == user_id:
+#             # TODO implement rankings based on category and not chore ID, and change "ranking" -> "preference"
+#             preferences.append((row["Chore UID"], row["Rank"]))
+#     file.close()
+#     return preferences
 
 # TODO remove this once frontend works
 def main():
