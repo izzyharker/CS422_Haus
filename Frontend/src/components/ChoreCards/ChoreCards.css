@@ -34,7 +34,7 @@
 }
 
 .chore-card {
-    background-color: rgb(210, 209, 209);
+    background-color: rgb(232, 232, 232);
     flex: 1;
 
     min-width: max(25%, 100px);

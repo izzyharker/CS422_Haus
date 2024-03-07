@@ -1,5 +1,6 @@
 import "./HouseContainer.css"
 
+// deprecated
 function AddChore() {
     return (
         <>

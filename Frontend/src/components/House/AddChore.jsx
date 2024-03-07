@@ -1,6 +1,7 @@
 import "./HouseContainer.css"
 
 function AddChore() {
+    // API call - button onclick function
     return (
         <>
             <div className="add-chore">

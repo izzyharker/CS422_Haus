@@ -16,3 +16,13 @@ You should get this series of lines:
   ➜  press h + enter to show help
 
 Click on the link to open the website in your browser. (the port may be different, but Vite is usually 5173)
+
+
+# Andrew
+API calls will all be marked with a comment that says "API" in the files - generally anywhere there's a fetch call now and many of the buttons. All given paths are relative to `Frontend/src/components`. 
+
+## List of Flask API functions:
++ `Login/Login.jsx`: button onclick function should validate the login and return True/False
++ `NavBar/UserProfile.jsx`: This is the settings button - I will add the option to delete a user account, that button will have an API function attached to it. (This module may move!)
++ `ChoreCards/ChoreCard.jsx`: Each card has "complete" button. The onclick function should notify the backend that the chore has been completed. 
++ `House/AddChore.jsx`: This one isn't done yet, but it will bring up a short form with a chore name and description, and then submit button to that needs to notify the backend that of the new chore.
