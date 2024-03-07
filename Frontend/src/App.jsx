@@ -9,19 +9,21 @@ function App() {
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
 	const [user, setUser] = useState()
+	const [isLoggedIn, setLogin] = useState(false)
 
 	// API call: this needs to login the correct user
     const handleSubmit = (event) => {
         event.preventDefault()
 
-		e.preventDefault();
-
 		const user = { user: username, pass: password};
+		console.log("user: ")
+		console.log(user)
+
 		setUser(user)
 
 		localStorage.setItem('user', username)
 
-		console.log(user)
+		setLogin(true)
     }
 
     const loginForm = (
@@ -57,17 +59,18 @@ function App() {
 
 	useEffect(() => {
 		const loggedInUser = localStorage.getItem("user");
-		console.log(loggedInUser)
 		if (loggedInUser) {
 			setUser(loggedInUser);
+			setLogin(true)
 		}
+		else setLogin(false);
 	}, []);
 
 	return (
 		<div className="haus">
 			< NavBar />
 
-			{(user) ? <div className="haus-content">
+			{(isLoggedIn) ? <div className="haus-content">
 					<ChoreContainer user={user}/>
 					<HouseContainer user={user}/>
 				</div> : loginForm}

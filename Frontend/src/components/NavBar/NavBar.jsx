@@ -1,6 +1,6 @@
 import "./NavBar.css"
 import HelpButton from "./Help"
-import UserProfileButton from "./UserProfile"
+import Settings from "./UserProfile"
 import Title from "./Title"
 
 function NavBar() {
@@ -10,7 +10,7 @@ function NavBar() {
             
             <div className="icon-buttons">
                     <HelpButton />
-                    <UserProfileButton />
+                    <Settings />
             </div>
         </div>
     );

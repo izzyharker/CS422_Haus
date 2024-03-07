@@ -37,8 +37,7 @@
     background-color: rgb(232, 232, 232);
     flex: 1;
 
-    min-width: max(25%, 100px);
-    max-width: 100px;
+    min-width: max(25%, 200px);
 
     height: 175px;
     border: 5px solid green;
