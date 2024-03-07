@@ -5,7 +5,7 @@ Date: 03/05/2024
 This file provides a comprehensive test suite for the DataInput.py module.
 """
 
-import context
+import Context
 import unittest
 import AutoAssign
 

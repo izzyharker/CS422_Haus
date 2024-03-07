@@ -30,17 +30,20 @@ CHORE_ATTRIBUTES = ['Chore ID',
                     'Deadline Date',
                     'Completion Date']
 
+
 # Symbolic constants for chore statuses
 class CHORE_STATUS(Enum):
     UNASSIGNED = "unassigned"
     ASSIGNED = "assigned"
     COMPLETED = "completed"
 
+
 # Chore CSV file location
 CHORES_FILEPATH = 'csvs/chores.csv'
 
 # date format to be used in all CSVs
 DATE_FORMAT = '%Y-%m-%d'
+
 
 class Chore:
     """
@@ -60,7 +63,10 @@ class Chore:
 
     def __init__(self, csv_chore_row: dict):
         """
-        Constructor to create a Chore object based on a dict from a chore CSV row
+        Constructor to create a Chore object based on a dict from a chore CSV row.
+        This is not a means to create a new chore, but rather to have an object-oriented
+        representation of a chore to be communicated between modules in the backend.
+        That is why an ID is expected to arleady exist,
         """
         self.name = csv_chore_row["Chore Name"]
         self.id = csv_chore_row["Chore ID"]
@@ -68,7 +74,8 @@ class Chore:
         self.category = csv_chore_row["Category"]
         self.expected_duration = int(csv_chore_row["Expected Duration"])
         self.status = CHORE_STATUS(csv_chore_row["Status"])
-        self.assignee_id = csv_chore_row["Assignee ID"]
+        self.assignee_id = csv_chore_row["Assignee ID"] \
+            if csv_chore_row["Assignee ID"] else None
         self.deadline_date = datetime.strptime(csv_chore_row["Deadline Date"], DATE_FORMAT).date() \
             if csv_chore_row["Deadline Date"] else None
         self.completion_date = datetime.strptime(csv_chore_row["Completion Date"], DATE_FORMAT).date() \
@@ -109,8 +116,10 @@ def convert_csv_to_json(csv_filename, json_filename):
         json.dump(data, json_file, indent=4)
 
 
-def generate_uid():
-    """ This function generates a unique key for a Haus. """
+def generate_uid() -> str:
+    """ This function generates a unique key, which can be used to
+    identify a chore or a Haus occupant.
+    """
     return str(uuid.uuid4())
 
 
@@ -367,6 +376,7 @@ def save_chore_rankings(chore_rankings_file, rankings):
         for ranking in rankings:
             writer.writerow(ranking)
 
+
 # getter functions, for user by other modules importing this one
 
 def get_chore_by_id(id: str):
@@ -383,12 +393,14 @@ def get_chore_by_id(id: str):
         return None
     # create a chore object from the row
     chore = Chore(found_csv_row)
+    file.close()
     return chore
 
+
 def get_chores_by_filters(assignee_id: str = None,
-               status: CHORE_STATUS = None,
-               min_deadline_date: date = None,
-               max_deadline_date : date = None) -> list[Chore]:
+                          status: CHORE_STATUS = None,
+                          min_deadline_date: date = None,
+                          max_deadline_date: date = None) -> list[Chore]:
     """
     Return a list of Chore objects matching the given filters.
     The list will be empty if none of the chores in the database match.
@@ -410,6 +422,7 @@ def get_chores_by_filters(assignee_id: str = None,
     file.close()
     return matching_chores
 
+
 def get_user_ids() -> list[str]:
     """
     Return a list of all user IDs in the database.
@@ -421,6 +434,7 @@ def get_user_ids() -> list[str]:
         user_ids.append(row["Occupant UID"])
     file.close()
     return user_ids
+
 
 def update_chore(chore: Chore) -> None:
     """
@@ -525,7 +539,6 @@ def main():
             break
         else:
             print("Invalid selection. Please choose again.")
-
 
 
 if __name__ == "__main__":
