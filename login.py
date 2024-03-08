@@ -17,7 +17,19 @@ def create_user(username, password, occupant_filepath):
     If user is successfully added, returns True.
     If user already exists, returns False.
     """
-    return DataInput.add_occupant_name(occupant_filepath, username, password)
+    # if this is the first name to be added, ensure that the headers are correct
+    DataInput.ensure_csv_headers(occupant_filepath, ['Occupant UID', 'Username', 'Password'])
+    occupant_uid = DataInput.generate_uid()
+
+    # check that someone with this username doesn't already exist
+    current_usernames = DataInput.get_username_list(occupant_filepath)
+    if username in current_usernames: 
+        print("Username already exists!")
+        return False
+    
+    # actually write the info into the CSV file
+    return DataInput.add_occupant_name(occupant_filepath, occupant_uid, username, password)
+
 
 def delete_user(username, password, occupant_filepath):
     """Verifies that a user exists, then removes from the haus"""

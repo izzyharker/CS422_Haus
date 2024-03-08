@@ -183,6 +183,7 @@ def get_haus_info():
     return haus_name, haus_type, num_people
 
 def get_username_list(filename):
+    """Returns the list of usernames stored in the occupants CSV file"""
     current_usernames = []
     with open(filename, mode='r', newline='') as file:
         reader = csv.reader(file)
@@ -195,6 +196,7 @@ def get_username_list(filename):
     return current_usernames
 
 def get_password(filename, username):
+    """Returns the password for a given username from the occupants CSV file"""
     with open(filename, mode='r', newline='') as file:
         reader = csv.reader(file)
         for row in reader:
@@ -203,17 +205,10 @@ def get_password(filename, username):
              
     # username isn't valid, so return nothing
              
-def add_occupant_name(filename, occupant_username, occupant_password):
-    # if this is the first name to be added, ensure the headers are correct
-    ensure_csv_headers(filename, ['Occupant UID', 'Username', 'Password'])
-    occupant_uid = str(uuid.uuid4())  # Generate unique ID for new occupant
-    
-    # check that someone with this username doesn't already exist
-    current_usernames = get_username_list(filename)
-    if occupant_username in current_usernames: 
-        print("Username already exists!")
-        return False
-    
+def add_occupant_name(filename, occupant_uid, occupant_username, occupant_password):
+    """Adds a username and password to the occupants CSV file. Also generates a UID for the new user.
+    Note: does not verify if this name already exists. That functionality is covered in the login.py module
+    as this module is strictly concerned with passing data."""
     with open(filename, mode='a', newline='') as file:
         writer = csv.writer(file)
         writer.writerow([occupant_uid, occupant_username, occupant_password])
@@ -499,7 +494,7 @@ def update_chore(chore: Chore) -> None:
 def main():
     # Initialize files
     # ensure_csv_headers(dwelling_file, ['House Name', 'House Type', 'Num Occupants'])
-    ensure_csv_headers(OCCUPANTS_FILEPATH, ['Occupant UID', 'Occupant Name'])
+    ensure_csv_headers(OCCUPANTS_FILEPATH, ['Occupant UID', 'Username', 'Password'])
     ensure_csv_headers(CHORE_RANKINGS_FILEPATH
 , ['Occupant UID', 'Chore UID', 'Rank'])
     initialize_chores(CHORES_FILEPATH)
@@ -519,7 +514,7 @@ def main():
     while True:
         print("\nMenu:")
         # print("1. Add a new Haus")
-        print("1. Add occupants to an existing Haus")
+        # print("1. Add occupants to an existing Haus")
         print("2. Rank chores for a Haus")
         print("3. Add or remove a chore")
         print("4. Exit")
@@ -534,9 +529,9 @@ def main():
             print(f"New Haus added with unique key: {unique_key}")
             break
         """
-        if choice == '1':
-            add_occupant_names(OCCUPANTS_FILEPATH)
-        elif choice == '2':
+        # if choice == '1':
+        #     add_occupant_names(OCCUPANTS_FILEPATH)
+        if choice == '2':
             rank_chores(OCCUPANTS_FILEPATH, CHORES_FILEPATH, CHORE_RANKINGS_FILEPATH
         )
             break
