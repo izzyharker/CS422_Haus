@@ -182,26 +182,43 @@ def get_haus_info():
 
     return haus_name, haus_type, num_people
 
+def get_username_list(filename):
+    current_usernames = []
+    with open(filename, mode='r', newline='') as file:
+        reader = csv.reader(file)
+        for row in reader:
+            current_usernames.append(row[1])
+        
+    # trim Username header        
+    current_usernames = current_usernames[1:]
 
-def add_occupant_names(OCCUPANTS_FILEPATH):
-    """ Allows user to enter names of occupants in a given Haus. """
+    return current_usernames
 
-    """
-    # Removing option to add house (deprecated)
-    house_uid = input("Enter the UID of the house: ").strip()
-    # Verify the house UID exists
-    num_occupants, found = verify_uid_and_get_occupants(dwelling_file, house_uid)
-    if not found:
-        print("House UID not found.")
-        return
-    """
-
-    occupant_name = input("Enter new occupant name (leave blank to finish): ")
-    while occupant_name:
-        occupant_uid = str(uuid.uuid4())  # Generate unique ID for new occupant
-        save_occupant_names(OCCUPANTS_FILEPATH, occupant_uid, occupant_name)
-        print(f"Added {occupant_name} with UID {occupant_uid} to house.")
-        occupant_name = input("Enter new occupant name (leave blank to finish): ")
+def get_password(filename, username):
+    with open(filename, mode='r', newline='') as file:
+        reader = csv.reader(file)
+        for row in reader:
+             if row[1] == username:
+                return row[2]
+             
+    # username isn't valid, so return nothing
+             
+def add_occupant_name(filename, occupant_username, occupant_password):
+    # if this is the first name to be added, ensure the headers are correct
+    ensure_csv_headers(filename, ['Occupant UID', 'Username', 'Password'])
+    occupant_uid = str(uuid.uuid4())  # Generate unique ID for new occupant
+    
+    # check that someone with this username doesn't already exist
+    current_usernames = get_username_list(filename)
+    if occupant_username in current_usernames: 
+        print("Username already exists!")
+        return False
+    
+    with open(filename, mode='a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow([occupant_uid, occupant_username, occupant_password])
+    print(f"Added {occupant_username} with UID {occupant_uid} and password {occupant_password} to house.")
+    return True
 
 
 def verify_uid_and_get_occupants(filename, uid):
