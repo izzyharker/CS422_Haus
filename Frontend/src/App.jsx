@@ -19,6 +19,19 @@ function App() {
 		console.log("user: ")
 		console.log(user)
 
+		var userdata = new FormData()
+		userdata.append('user', user['user'])
+		userdata.append('pass', user['pass'])
+		fetch("http://localhost:5000/login/login_user", {
+			method: 'POST',
+			mode: 'cors',
+			body: userdata
+		}).then(
+			response => response.json()
+		).then(
+			data => console.log(data)
+		)
+		// Use the response json to decide what to do here
 		setUser(user)
 
 		localStorage.setItem('user', username)

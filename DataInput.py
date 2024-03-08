@@ -420,7 +420,7 @@ def get_chore_by_id(id: str):
 def get_chores_by_filters(assignee_id: str = None,
                           status: CHORE_STATUS = None,
                           min_deadline_date: date = None,
-                          max_deadline_date: date = None) -> list[Chore]:
+                          max_deadline_date: date = None) -> 'list[Chore]':
     """
     Return a list of Chore objects matching the given filters.
     The list will be empty if none of the chores in the database match.
@@ -443,7 +443,7 @@ def get_chores_by_filters(assignee_id: str = None,
     return matching_chores
 
 
-def get_user_ids() -> list[str]:
+def get_user_ids() -> 'list[str]':
     """
     Return a list of all user IDs in the database.
     """
