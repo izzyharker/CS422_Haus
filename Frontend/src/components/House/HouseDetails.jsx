@@ -17,7 +17,6 @@ function HouseDetails(props) {
 
             </div>)}
             <AddChore />
-            <AddUser />
         </div>
     )
 }

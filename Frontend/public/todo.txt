@@ -1,3 +1,4 @@
 user login screen
-list of what i need from andrew
 remove settings and add user buttons
+list of what i need from andrew [done]
+instructions for installing/setting up frontend [done]

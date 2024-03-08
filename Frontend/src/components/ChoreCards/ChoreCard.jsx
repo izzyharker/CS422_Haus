@@ -2,6 +2,8 @@
 
 function ChoreCard(props) {
     let chore = props.chore
+
+    // API call: button onclick function
     return (
         <>
             <div className="chore-card">

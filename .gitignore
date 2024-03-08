@@ -144,5 +144,9 @@ dist-ssr
 *.sln
 *.sw?
 
+
 # Temporary files that may appear in csvs directory during testing
 csvs/tmp*
+
+# pycache for vscode
+*.pyc

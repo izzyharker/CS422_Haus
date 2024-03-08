@@ -1,5 +1,5 @@
 """
-Author: Carter Young, Alex JPS
+Author: Carter Young, Alex JPS, Connie Williamson
 Date: 02/24/24
 
 This file represents the data input module. It also enables all data input to be stored in the appropriate file type.
@@ -40,6 +40,12 @@ class CHORE_STATUS(Enum):
 
 # Chore CSV file location
 CHORES_FILEPATH = 'csvs/chores.csv'
+
+# Occupants CSV file location
+OCCUPANTS_FILEPATH = 'csvs/occupants.csv'
+
+# Chore rankings file location
+CHORE_RANKINGS_FILEPATH = 'csvs/chore_rankings.csv'
 
 # date format to be used in all CSVs
 DATE_FORMAT = '%Y-%m-%d'
@@ -185,26 +191,38 @@ def get_haus_info():
 
     return haus_name, haus_type, num_people
 
+def get_username_list(filename):
+    """Returns the list of usernames stored in the occupants CSV file"""
+    current_usernames = []
+    with open(filename, mode='r', newline='') as file:
+        reader = csv.reader(file)
+        for row in reader:
+            current_usernames.append(row[1])
+        
+    # trim Username header        
+    current_usernames = current_usernames[1:]
 
-def add_occupant_names(occupants_file):
-    """ Allows user to enter names of occupants in a given Haus. """
+    return current_usernames
 
-    """
-    # Removing option to add house (deprecated)
-    house_uid = input("Enter the UID of the house: ").strip()
-    # Verify the house UID exists
-    num_occupants, found = verify_uid_and_get_occupants(dwelling_file, house_uid)
-    if not found:
-        print("House UID not found.")
-        return
-    """
-
-    occupant_name = input("Enter new occupant name (leave blank to finish): ")
-    while occupant_name:
-        occupant_uid = str(uuid.uuid4())  # Generate unique ID for new occupant
-        save_occupant_names(occupants_file, occupant_uid, occupant_name)
-        print(f"Added {occupant_name} with UID {occupant_uid} to house.")
-        occupant_name = input("Enter new occupant name (leave blank to finish): ")
+def get_password(filename, username):
+    """Returns the password for a given username from the occupants CSV file"""
+    with open(filename, mode='r', newline='') as file:
+        reader = csv.reader(file)
+        for row in reader:
+             if row[1] == username:
+                return row[2]
+             
+    # username isn't valid, so return nothing
+             
+def add_occupant_name(filename, occupant_uid, occupant_username, occupant_password):
+    """Adds a username and password to the occupants CSV file. Also generates a UID for the new user.
+    Note: does not verify if this name already exists. That functionality is covered in the login.py module
+    as this module is strictly concerned with passing data."""
+    with open(filename, mode='a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow([occupant_uid, occupant_username, occupant_password])
+    # print(f"Added {occupant_username} with UID {occupant_uid} and password {occupant_password} to house.")
+    return True
 
 
 def verify_uid_and_get_occupants(filename, uid):
@@ -222,7 +240,7 @@ def save_occupant_names(filename, occupant_uid, occupant_name):
         writer.writerow([occupant_uid, occupant_name])
 
 
-def initialize_chores(chores_file):
+def initialize_chores(CHORES_FILEPATH):
     default_chores = [
         (
             generate_uid(), "Dishes", "Wash and dry the dishes", "Kitchen", "15", CHORE_STATUS.UNASSIGNED.value, None,
@@ -246,19 +264,19 @@ def initialize_chores(chores_file):
         (generate_uid(), "Mopping", "Mop floors", "Floors", "20", CHORE_STATUS.UNASSIGNED.value, None, None, None)
     ]
     try:
-        with open(chores_file, 'r') as file:
+        with open(CHORES_FILEPATH, 'r') as file:
             pass
     except FileNotFoundError:
-        with open(chores_file, 'w', newline='') as file:
+        with open(CHORES_FILEPATH, 'w', newline='') as file:
             writer = csv.writer(file)
             writer.writerow(CHORE_ATTRIBUTES)
             for chore in default_chores:
                 writer.writerow(chore)
 
 
-def rank_chores(occupants_file, chores_file, chore_rankings_file):
+def rank_chores(OCCUPANTS_FILEPATH, CHORES_FILEPATH, CHORE_RANKINGS_FILEPATH):
     """ This function allows users to rank chores """
-    occupants = retrieve_occupants_names_and_uids(occupants_file)
+    occupants = retrieve_occupants_names_and_uids(OCCUPANTS_FILEPATH)
 
     if not occupants:
         print("No occupants found.")
@@ -274,7 +292,7 @@ def rank_chores(occupants_file, chores_file, chore_rankings_file):
         return
 
     print("\nChores:")
-    chores = list_chores(chores_file)
+    chores = list_chores(CHORES_FILEPATH)
     rankings = []
     for chore_id, chore_name, _, _, _, _, _, _, _ in chores:
         valid_rank = False
@@ -286,12 +304,13 @@ def rank_chores(occupants_file, chores_file, chore_rankings_file):
             else:
                 print("Invalid rank. Please enter 0, 1, or 2.")
 
-    save_chore_rankings(chore_rankings_file, rankings)
+    save_chore_rankings(CHORE_RANKINGS_FILEPATH
+, rankings)
 
 
-def retrieve_occupants_names_and_uids(occupants_file):
+def retrieve_occupants_names_and_uids(OCCUPANTS_FILEPATH):
     occupants = {}
-    with open(occupants_file, mode='r') as file:
+    with open(OCCUPANTS_FILEPATH, mode='r') as file:
         reader = csv.reader(file)
         next(reader)  # Skip the header
 
@@ -307,18 +326,18 @@ def retrieve_occupants_names_and_uids(occupants_file):
     return occupants
 
 
-def add_or_remove_chores(chores_file):
+def add_or_remove_chores(CHORES_FILEPATH):
     """Allows users to add or remove chores from the list."""
     action = input("Do you want to add or remove a chore? (add/remove): ").lower()
     if action == 'add':
-        add_chore(chores_file)
+        add_chore(CHORES_FILEPATH)
     elif action == 'remove':
-        remove_chore(chores_file)
+        remove_chore(CHORES_FILEPATH)
     else:
         print("Invalid action. Please enter 'add' or 'remove'.")
 
 
-def add_chore(chores_file):
+def add_chore(CHORES_FILEPATH):
     """Adds a new chore to the chores list."""
     chore_name = input("Enter the name of the chore: ")
     description = input("Enter the chore description: ")
@@ -326,7 +345,7 @@ def add_chore(chores_file):
     expected_duration = input("Enter the estimated time to complete the chore (in minutes): ")
     chore_id = generate_uid()  # Using UUID for unique chore identifiers
 
-    with open(chores_file, mode='a', newline='') as file:
+    with open(CHORES_FILEPATH, mode='a', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(
             [chore_id, chore_name, description, category, expected_duration, CHORE_STATUS.UNASSIGNED.value, None, None,
@@ -335,13 +354,13 @@ def add_chore(chores_file):
     print(f"Chore '{chore_name}' added successfully.")
 
 
-def remove_chore(chores_file):
+def remove_chore(CHORES_FILEPATH):
     """Removes a chore from the chores list."""
     chore_name = input("Enter the name of the chore to remove: ")
     temp_chores = []
     chore_found = False
 
-    with open(chores_file, mode='r', newline='') as file:
+    with open(CHORES_FILEPATH, mode='r', newline='') as file:
         reader = csv.reader(file)
         headers = next(reader)  # Capture headers
         for row in reader:
@@ -351,7 +370,7 @@ def remove_chore(chores_file):
                 chore_found = True
 
     if chore_found:
-        with open(chores_file, mode='w', newline='') as file:
+        with open(CHORES_FILEPATH, mode='w', newline='') as file:
             writer = csv.writer(file)
             writer.writerow(headers)  # Write the headers back
             writer.writerows(temp_chores)  # Write the remaining chores
@@ -360,9 +379,9 @@ def remove_chore(chores_file):
         print("Chore not found.")
 
 
-def list_chores(chores_file):
+def list_chores(CHORES_FILEPATH):
     chores = []
-    with open(chores_file, mode='r') as file:
+    with open(CHORES_FILEPATH, mode='r') as file:
         reader = csv.reader(file)
         next(reader)  # Skip header
         for row in reader:
@@ -370,8 +389,9 @@ def list_chores(chores_file):
     return chores
 
 
-def save_chore_rankings(chore_rankings_file, rankings):
-    with open(chore_rankings_file, mode='a', newline='') as file:
+def save_chore_rankings(CHORE_RANKINGS_FILEPATH, rankings):
+    with open(CHORE_RANKINGS_FILEPATH
+, mode='a', newline='') as file:
         writer = csv.writer(file)
         for ranking in rankings:
             writer.writerow(ranking)
@@ -486,17 +506,13 @@ def update_chore(chore: Chore) -> None:
 
 # TODO remove this once frontend works
 def main():
-    # dwelling_file = 'csvs/hauses.csv'
-    occupants_file = 'csvs/occupants.csv'
-    chores_file = 'csvs/chores.csv'
-    chore_rankings_file = 'csvs/chore_rankings.csv'
-
     # Initialize files
     # ensure_csv_headers(dwelling_file, ['House Name', 'House Type', 'Num Occupants'])
-    ensure_csv_headers(occupants_file, ['Occupant UID', 'Occupant Name'])
-    ensure_csv_headers(chore_rankings_file, ['Occupant UID', 'Chore UID', 'Rank'])
-    initialize_chores(chores_file)
-    ensure_csv_headers(chores_file, CHORE_ATTRIBUTES)
+    ensure_csv_headers(OCCUPANTS_FILEPATH, ['Occupant UID', 'Username', 'Password'])
+    ensure_csv_headers(CHORE_RANKINGS_FILEPATH
+, ['Occupant UID', 'Chore UID', 'Rank'])
+    initialize_chores(CHORES_FILEPATH)
+    ensure_csv_headers(CHORES_FILEPATH, CHORE_ATTRIBUTES)
 
     # Convert 'hauses.csv' to 'hauses.json'
     # convert_csv_to_json('csvs/hauses.csv', 'jsons/hauses.json')
@@ -512,7 +528,7 @@ def main():
     while True:
         print("\nMenu:")
         # print("1. Add a new Haus")
-        print("1. Add occupants to an existing Haus")
+        # print("1. Add occupants to an existing Haus")
         print("2. Rank chores for a Haus")
         print("3. Add or remove a chore")
         print("4. Exit")
@@ -527,13 +543,14 @@ def main():
             print(f"New Haus added with unique key: {unique_key}")
             break
         """
-        if choice == '1':
-            add_occupant_names(occupants_file)
-        elif choice == '2':
-            rank_chores(occupants_file, chores_file, chore_rankings_file)
+        # if choice == '1':
+        #     add_occupant_names(OCCUPANTS_FILEPATH)
+        if choice == '2':
+            rank_chores(OCCUPANTS_FILEPATH, CHORES_FILEPATH, CHORE_RANKINGS_FILEPATH
+        )
             break
         elif choice == '3':
-            add_or_remove_chores(chores_file)
+            add_or_remove_chores(CHORES_FILEPATH)
         elif choice == '4':
             print("Exiting program.")
             break
