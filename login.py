@@ -22,8 +22,7 @@ def create_user(username, password, occupant_filepath):
     occupant_uid = DataInput.generate_uid()
 
     # check that someone with this username doesn't already exist
-    current_usernames = DataInput.get_username_list(occupant_filepath)
-    if username in current_usernames: 
+    if verify_user_exists(username, occupant_filepath): 
         print("Username already exists!")
         return False
     
@@ -42,8 +41,7 @@ def log_in_user(username, password, occupant_filepath):
     # TODO: create a user class so we can keep track of who is logged in
     # this log in function should set that user class to change on a successful attempt
     # first verify if the username is a valid username
-    current_usernames = DataInput.get_username_list(occupant_filepath)
-    if username not in current_usernames:
+    if not verify_user_exists(username, occupant_filepath):
         print("Username not valid!")
         return False
     
@@ -54,7 +52,11 @@ def log_in_user(username, password, occupant_filepath):
         print("Password not valid!")
         return False
     
+    # TODO: interact with frontend and chore system here to actually log this person in
+    return True
+    
 
 def verify_user_exists(username, occupant_filepath):
     """Returns True if a username belongs to a user in the haus, False otherwise"""
-    pass
+    current_usernames = DataInput.get_username_list(occupant_filepath)
+    return username in current_usernames

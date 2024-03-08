@@ -77,4 +77,22 @@ class TestLogInUser(unittest.TestCase):
     pass
 
 class TestVerifyUserExists(unittest.TestCase):
-        pass
+    def test_user_does_exist_returns_true(self):
+        start_contents = [
+            ["Occupant UID", "Username", "Password"],
+            ["MOCK-UID", "A", "XYZ"],
+            ["MOCK-UID", "B", "HKJ"]
+        ]
+        setUpCSV(start_contents)
+        self.assertEqual(True, verify_user_exists("A", test_file))
+        tearDownCSV()
+
+    def test_user_does_not_exist_returns_false(self):
+        start_contents = [
+            ["Occupant UID", "Username", "Password"],
+            ["MOCK-UID", "A", "XYZ"],
+            ["MOCK-UID", "B", "HKJ"]
+        ]
+        setUpCSV(start_contents)
+        self.assertEqual(False, verify_user_exists("C", test_file))
+        tearDownCSV()

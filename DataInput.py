@@ -212,7 +212,7 @@ def add_occupant_name(filename, occupant_uid, occupant_username, occupant_passwo
     with open(filename, mode='a', newline='') as file:
         writer = csv.writer(file)
         writer.writerow([occupant_uid, occupant_username, occupant_password])
-    print(f"Added {occupant_username} with UID {occupant_uid} and password {occupant_password} to house.")
+    # print(f"Added {occupant_username} with UID {occupant_uid} and password {occupant_password} to house.")
     return True
 
 
