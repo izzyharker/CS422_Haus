@@ -1,9 +1,14 @@
 import "./ChoreCards.css"
-import ChoreCard from "./ChoreCard"
 import { useState, useEffect } from "react";
 
 function ChoreList(props) {
     const [chores, setChores] = useState();
+
+    const completeChore = (id) => {
+        // API call - update chore in backend
+
+        setChores(chores.filter((ch) => ch["Chore ID"] != id))
+    }
 
     useEffect(() => {
         fetch('/chores.json')
@@ -22,8 +27,11 @@ function ChoreList(props) {
         {chores &&
         (<div className={"chore-cards my-chores"}>
             {chores.map((chore) => 
-                <ChoreCard key={chore["Chore ID"]} chore={chore} />)}
-            {/* <AddChore /> */}
+                <div key={chore["Chore ID"]} className="chore-card">
+                    <h1>{chore["Chore Name"]}</h1>
+                    <div className="chore-description">{chore["Description"]}</div>
+                    <button onClick={() => completeChore(chore["Chore ID"])}>Complete</button>
+                </div>)}
         </div>)}
     </div>
     )

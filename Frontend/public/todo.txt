@@ -1,0 +1,21 @@
+styling - 
+buttons
+help link
+cards (floating?)
+add chore form + button
+delete chore form + button
+
+
+user documentation
+
+code comments
+
+fetch/post methods - 
+logout
+delete user
+login
+list of house users
+chore list
+complete chore
+add chore
+create user

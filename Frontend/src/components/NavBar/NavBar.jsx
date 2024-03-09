@@ -1,17 +1,18 @@
 import "./NavBar.css"
 import HelpButton from "./Help"
-import Settings from "./UserProfile"
+import Logout from "./Logout"
 import Title from "./Title"
 
-function NavBar() {
+function NavBar(props) {
     return (
         <div className="navigation">
             <Title title={"HAUS"}/>
             
-            <div className="icon-buttons">
+            {props.renderButtons &&
+            (<div className="icon-buttons">
                     <HelpButton />
-                    <Settings />
-            </div>
+                    <Logout setLogin={props.setLogin}/>
+            </div>)}
         </div>
     );
 }

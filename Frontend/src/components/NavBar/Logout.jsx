@@ -6,13 +6,16 @@ function logout() {
     window.location.reload()
 }
 
-function Settings() {
+function Logout(props) {
     // API: delete user account
     return (
-        <button className="user-profile" onClick={() => logout()}>
+        <button className="user-profile" onClick={() => {
+            localStorage.clear()
+            props.setLogin()
+        }}>
             Logout
         </button>
     )
 }
 
-export default Settings
+export default Logout

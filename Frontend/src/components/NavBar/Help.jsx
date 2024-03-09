@@ -2,9 +2,9 @@
 
 function HelpButton() {
     return (
-        <button className="user-profile" onClick={() => console.log("CLicked HelpButton")}>
+        <a className="user-profile" target="_blank" href="https://github.com/izzyharker/CS422_Haus">
             Help
-        </button>
+        </a>
     )
 }
 
