@@ -5,6 +5,12 @@ import ChoreContainer from "./components/ChoreCards/ChoreContainer"
 import HouseContainer from "./components/House/HouseContainer"
 import { useEffect, useState } from 'react'
 
+function deleteAccount(username) {
+	// API call: delete current user
+	localStorage.clear()
+	window.location.reload()
+}
+
 function App() {
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
@@ -74,6 +80,10 @@ function App() {
 					<ChoreContainer user={user}/>
 					<HouseContainer user={user}/>
 				</div> : loginForm}
+
+			<div className="delete-acct">
+				<button onClick={() => deleteAccount(username)}>Delete Account</button>
+			</div>
 		</div>
 	)
 }
