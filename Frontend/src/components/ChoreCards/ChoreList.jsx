@@ -1,19 +1,27 @@
 import "./ChoreCards.css"
 import ChoreCard from "./ChoreCard"
+import { useState, useEffect } from "react";
 
 function ChoreList(props) {
-    let which_chores = "My"
-    if (!props.myChores) {
-        which_chores = "House"
-    }
+    const [chores, setChores] = useState();
+
+    useEffect(() => {
+        fetch('/chores.json')
+        .then((res) => res.json())
+        .then((chores) => {
+            // console.log(data);
+            setChores(chores);
+        });
+    }, []);
+
     return ( 
     <div className="chore-list">
-        <div className={(props.myChores ? "chore-title my-chores" : "chore-title house-chores")}>
-            <h1>{which_chores} chores</h1>
+        <div className={("chore-title my-chores")}>
+            <h1>My chores</h1>
         </div>
-        {props.chores &&
-        (<div className={(props.myChores ? "chore-cards my-chores" : "chore-cards house-chores")}>
-            {props.chores.map((chore) => 
+        {chores &&
+        (<div className={"chore-cards my-chores"}>
+            {chores.map((chore) => 
                 <ChoreCard key={chore["Chore ID"]} chore={chore} />)}
             {/* <AddChore /> */}
         </div>)}
