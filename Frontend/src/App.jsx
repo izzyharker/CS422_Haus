@@ -12,7 +12,6 @@ function App() {
 	const [isLoggedIn, setLogin] = useState(false)
 	const [errorMessages, setErrorMessages] = useState({})
 	const [create, setCreate] = useState(false)
-	const [delPass, setDelPass] = useState(false)
 
 	// const database = [
 	// 	{
@@ -54,21 +53,6 @@ function App() {
 		setLogin(true)
 		localStorage.setItem("user", "default")
     }
-
-	const deleteAccount = (pass) => {
-		setDelPass(false)
-
-		if (true) {
-			// remove from backend (API)
-
-			// remove from browser storage
-			localStorage.removeItem("user")
-			setLogin(false)
-		}
-		else {
-			setErrorMessages({ name: "pass", message: errors.pass });
-		}
-	}
 
 	const renderErrorMessage = (name) =>
 		name === errorMessages.name && (
@@ -112,7 +96,7 @@ function App() {
 						<input type="submit" value="Login"/>
 					</div>
 				</form>
-				<button onClick={() => setCreate(true)}>Create account</button>
+				<button className="new-acct" onClick={() => setCreate(true)}>Create account</button>
 			</div>
         </div>
     );
@@ -146,29 +130,7 @@ function App() {
 						<input type="submit" value="Create Account"/>
 					</div>
 				</form>
-			</div>
-        </div>
-    );
-
-	const delAcctForm = (
-        <div className="login">
-			<div className="form">
-				<h1>Join HAUS</h1>
-				<form onSubmit={deleteAccount}>
-					<div className="input-container">
-						<label>Password </label>
-						<input 
-							type="password" 
-							name="pass" 
-							required
-							onChange={({ target }) => setPassword(target.value)}	
-						/>
-						{renderErrorMessage("pass")}
-					</div>
-					<div className="button-container">
-						<input type="submit" value="Create Account"/>
-					</div>
-				</form>
+				<button className="new-acct" onClick={() => setCreate(false)}>Cancel</button>
 			</div>
         </div>
     );
@@ -184,23 +146,15 @@ function App() {
 
 	return (
 		<>
-		{delPass && 
-		<div className="del-pass">
-			{delAcctForm}
-		</div>}
 		<div className="haus">
 			<NavBar renderButtons={isLoggedIn} setLogin={setLogin} />
 
-			{(isLoggedIn) ? <>
-							<div className="haus-content">
-								<ChoreContainer user={user}/>
-								<HouseContainer user={user}/>
-							</div> 
-							<div className="delete-acct">
-								<button onClick={() => setDelPass(true)}>Delete Account</button>
-							</div>
-							</>
-				: (create) ? createAcctForm : loginForm}
+		{(isLoggedIn) ? <>
+				<div className="haus-content">
+					<ChoreContainer user={user}/>
+					<HouseContainer user={user}/>
+				</div> 
+			</>: (create) ? createAcctForm : loginForm}
 		</div>
 		</>
 	)

@@ -1,3 +1,15 @@
+/*
+light green: #00b300
+dark green: #125212
+purple: #8592dd
+dark gray: #202020
+whiteish: #d7e3d4
+*/
+
+/* * {
+    border: 1px solid red;
+} */
+
 .house {
     flex: 2;
     display: flex;
@@ -23,7 +35,7 @@
 }
 
 .house-details h1 {
-    padding: 0 2em;
+    padding: 0 1em;
 }
 
 .house-occupants {
@@ -65,7 +77,13 @@
 }
 
 .add-chore {
-    flex: 1;
+    /* display: flex; */
+    justify-content: left;
+    align-items: center;
+    padding: 0 2em;
+}
+
+.add-chore button {
     display: flex;
 
     padding-top: 5%;
@@ -73,4 +91,98 @@
     justify-content: left;
     align-items: center;
     /* border: 2px solid red; */
+
+    border-radius: 8px;
+    border: 2px solid #00b300;
+    padding: 1em 1em;
+    font-size: 1em;
+    font-weight: 500;
+    font-family: inherit;
+    background-color: rgba(0, 0, 0, 0);
+    cursor: pointer;
+    transition: all 0.25s;
+    color: rgb(36, 36, 36);
+}
+
+.add-chore button:hover {
+    background-color: #125212;
+    color: white;
+}
+
+.popup-form {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(219, 219, 219, .95);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.25s;
+}
+
+.user-form {
+    position: relative;
+}
+
+.delete-acct {
+    padding: 0 1em;
+}
+
+.delete-acct button {
+    display: flex;
+
+    padding-top: 5%;
+    max-height: 5%;
+    justify-content: left;
+    align-items: center;
+    /* border: 2px solid red; */
+
+    border-radius: 8px;
+    border: 2px solid #00b300;
+    padding: 1em 1em;
+    font-size: 1em;
+    font-weight: 500;
+    font-family: inherit;
+    background-color: rgba(0, 0, 0, 0);
+    cursor: pointer;
+    transition: all 0.25s;
+    color: rgb(36, 36, 36);
+}
+
+.delete-acct button:hover {
+    background-color: #125212;
+    color: white;
+}
+
+.exit-form {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.exit-form button {
+    border: none;
+    border-radius: 0;
+    background-color: red;
+    color: #d7e3d4;
+    padding: 0.5em;
+    margin-left: 0em;
+}
+
+.exit-form button:hover {
+    background-color: darkred;
+}
+
+.del-warning {
+    padding: 0;
+    margin: 0;
+    color: red;
+}
+
+.form h1 {
+    margin-bottom: 0;
+    
 }

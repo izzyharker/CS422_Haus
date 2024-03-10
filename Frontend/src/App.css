@@ -1,3 +1,15 @@
+/*
+light green: #00b300
+dark green: #125212
+purple: #8592dd
+dark gray: #202020
+whiteish: #d7e3d4
+*/
+
+/* * {
+  border: 1px solid red;
+} */
+
 .haus {
   display: flex;
   flex-direction: column;
@@ -28,17 +40,19 @@ input[type="password"] {
 }
 
 input[type="submit"] {
+  border-radius: 8px;
   margin-top: 10px;
   cursor: pointer;
   font-size: 15px;
-  background: #01d28e;
-  border: 1px solid #01d28e;
+  background: #00b300;
+  border: 2px solid #00b300;
   color: #fff;
   padding: 10px 20px;
+  transition: all 0.25s;
 }
 
 input[type="submit"]:hover {
-  background: #6cf0c2;
+  background: #125212;
 }
 
 .button-container {
@@ -75,4 +89,14 @@ input[type="submit"]:hover {
 
 .form h1 {
   text-align: center;
+}
+
+.form {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.new-acct {
+  margin-top: 0.5em;
 }

@@ -1,10 +1,4 @@
-styling - 
-buttons
-help link
-cards (floating?)
-add chore form + button
-delete chore form + button
-
+add warning to delete (irreversible action)
 
 user documentation
 

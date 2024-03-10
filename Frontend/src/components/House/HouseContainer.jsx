@@ -15,7 +15,7 @@ function HouseContainer(props) {
 
     return (
         <div className="house">
-            <HouseDetails houseName="Haus Members" houseData={data}/>
+            <HouseDetails houseName="Haus Information" houseData={data}/>
         </div>
     )
 }
