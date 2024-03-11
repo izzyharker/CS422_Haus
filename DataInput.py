@@ -43,6 +43,7 @@ class CHORE_STATUS(Enum):
     RENEWED = "renewed"  # (of repeating chores) chore is renewed and should not be renewed again
 
 
+
 # Chore CSV file location
 CHORES_FILEPATH = 'csvs/chores.csv'
 
@@ -75,7 +76,10 @@ class Chore:
 
     def __init__(self, csv_chore_row: dict):
         """
-        Constructor to create a Chore object based on a dict from a chore CSV row
+        Constructor to create a Chore object based on a dict from a chore CSV row.
+        This is not a means to create a new chore, but rather to have an object-oriented
+        representation of a chore to be communicated between modules in the backend.
+        That is why an ID is expected to arleady exist,
         """
         self.name = csv_chore_row["Chore Name"]
         self.id = csv_chore_row["Chore ID"]
@@ -83,7 +87,8 @@ class Chore:
         self.category = csv_chore_row["Category"]
         self.expected_duration = int(csv_chore_row["Expected Duration"])
         self.status = CHORE_STATUS(csv_chore_row["Status"])
-        self.assignee_id = csv_chore_row["Assignee ID"]
+        self.assignee_id = csv_chore_row["Assignee ID"] \
+            if csv_chore_row["Assignee ID"] else None
         self.deadline_date = datetime.strptime(csv_chore_row["Deadline Date"], DATE_FORMAT).date() \
             if csv_chore_row["Deadline Date"] else None
         self.frequency = int(csv_chore_row["Frequency"]) if csv_chore_row["Frequency"] else 0
@@ -143,8 +148,10 @@ def convert_csv_to_json(csv_filename, json_filename):
         json.dump(data, json_file, indent=4)
 
 
-def generate_uid():
-    """ This function generates a unique key for a Haus. """
+def generate_uid() -> str:
+    """ This function generates a unique key, which can be used to
+    identify a chore or a Haus occupant.
+    """
     return str(uuid.uuid4())
 
 
@@ -435,6 +442,7 @@ def get_chore_by_id(id: str):
         return None
     # create a chore object from the row
     chore = Chore(found_csv_row)
+    file.close()
     return chore
 
 

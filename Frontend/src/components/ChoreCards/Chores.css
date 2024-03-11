@@ -1,3 +1,9 @@
+/* 
+Author: Izzy Harker
+Date updated: 3/9/24
+Description: Contains styling information for ChoreContainer.jsx and ChoreList.jsx 
+*/
+
 .chore-container {
     flex: 1;
     display: flex;
@@ -38,12 +44,21 @@
     flex: 1;
 
     min-width: max(25%, 200px);
+    max-width: 40%;
 
     height: 175px;
-    border: 5px solid green;
+    border: 5px solid #125212;
     border-radius: 10%;
     text-align: center;
     padding-top: 1em;
+
+    box-shadow: 8px 8px 8px #202020;
+
+    transition: all 0.3s ease-out;
+}
+
+.chore-card:hover {
+    translate: 0% -5%;
 }
 
 .chore-card h1 {
@@ -58,3 +73,15 @@
     margin: 0 1em;
     padding-bottom: 5%;
 }
+
+.chore-card button {
+    border: 2px solid #00b300;
+}
+
+/*
+light green: #00b300
+dark green: #125212
+purple: #8592dd
+dark gray: #202020
+whiteish: #d7e3d4
+*/

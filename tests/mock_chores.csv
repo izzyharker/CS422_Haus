@@ -1,0 +1,6 @@
+Chore ID,Chore Name,Description,Category,Expected Duration,Status,Assignee ID,Deadline Date,Completion Date
+f79759a1-47ef-42c4-9879-c353c3329f50,Start dishwasher,"Throw 'em in, add soap, and start",Kitchen,15,assigned,95454c41-dc2f-451e-97b5-1d53b31cfa16,2024-03-12,
+b2c10fdc-f023-4360-9bf6-d62122333039,Feed the cats,They hunger,Pets,15,completed,c55b4c05-2f74-4bfb-8077-03192dd74aab,2024-03-15,2024-03-06
+9e4fe3a0-aa47-40e0-9efd-eb4f62c5f922,Dry clothes,Put them in the dryer (or hang them),Laundry,20,assigned,0c9ef357-f312-4f85-93c0-16672244a2b5,2024-03-15,
+7cb263c2-52f5-4077-971e-491d3d19ed29,Vacuum,Vacuum all carpets and rugs,General,30,unassigned,,2024-03-11,
+575e2770-e278-4dc5-95a3-e918ecebdc31,Dusting,Dust all surfaces,General,20,assigned,0c9ef357-f312-4f85-93c0-16672244a2b5,2024-03-11,
