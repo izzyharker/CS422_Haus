@@ -1,22 +1,21 @@
 """
-Automatic Chore Assignment
+Automatic Chore Assignment and Repetition
 Author: Alex JPS
 Date: 03/05/2024
 
 This file represents the automatic chore assignment system, which decides who to give each unassigned chore
 based on previous workload and future expected workload.
 
-Inputs (obtained by interfacing with DataInput module):
-- Work history of each user, currently unassigned chores
-
-Outputs:
-- Assignment decisions that keep the workload well distributed
+This also handles generating new instances of chores which repeat.
 """
 
-# imports
+# other modules in the software
 import DataInput
 from DataInput import CHORE_STATUS, Chore
-from datetime import datetime, timedelta
+
+# python libraries
+import re
+from datetime import datetime, timedelta, date
 
 def assign_unassigned_chores() -> None:
     """
@@ -50,7 +49,7 @@ def assign_chore(chore: Chore, assignee_id: str) -> None:
     chore.status = CHORE_STATUS.ASSIGNED
     chore.assignee_id = assignee_id
     # Update the database using DataInput
-    DataInput.update_chore(chore)
+    DataInput.update_chore_by_object(chore)
 
 def user_workload(user_id: str):
     """
@@ -66,3 +65,53 @@ def user_workload(user_id: str):
     for chore in work_chores:
         workload += chore.expected_duration
     return workload
+
+def renew_repeating_chores() -> None:
+    """
+    Renew all repeating chores that are ready to be renewed.
+    (i.e. they are both completed and the deadline has passed)
+
+    This also marks these chores as renewed such that they will never be renewed again.
+    (instead, the new instance of the chore will be renewed later, when it is completed)
+    """
+    def increment_id(old_id: str) -> str:
+        """
+        Given a Chore ID in one of the two following formats, increment the number indicating repetitions.
+        uuid
+        uuid(repetitions)
+        """
+        # make sure the old id is in a valid format (prevent undefined behavior)
+        pattern = r'^[\w-]+(\(\d+\))?$'
+        if not re.match(pattern, old_id):
+            raise ValueError(f"Invalid id format: {old_id}")
+        # no parentheses? add them
+        if "(" not in old_id:
+            return f"{old_id}(1)"
+        # get the unique uuid part and the parentheses part
+        uuid_part, parentheses_part = old_id.split("(")
+        parentheses_part = parentheses_part.split(")")[0]
+        # increment the number and return the new id
+        repetition = int(parentheses_part) + 1
+        return f"{uuid_part}({repetition})"
+
+    # Get all repeating chores that are ready for renewal
+    chores_to_renew: list[Chore] = DataInput.get_chores_by_filters(
+        repeating_only=True,
+        status=CHORE_STATUS.COMPLETED,
+        max_deadline_date=date.today()
+    )
+
+    # renew each applicable chore
+    for chore in chores_to_renew:
+        # mark the chore as renewed
+        chore.status = CHORE_STATUS.RENEWED
+        DataInput.update_chore_by_object(chore)
+        # edit the chore attributes to be used for the new instance
+        assert isinstance(chore.completion_date, date)  # Python linter freaks out without this line
+        chore.deadline_date = chore.completion_date + timedelta(days=chore.frequency+1)
+        chore.status = CHORE_STATUS.UNASSIGNED
+        chore.assignee_id = None
+        chore.completion_date = None
+        chore.id = increment_id(chore.id)
+        # add the new chore to the database
+        DataInput.new_chore_by_object(chore)
