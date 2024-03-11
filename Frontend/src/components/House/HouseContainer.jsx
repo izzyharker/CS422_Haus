@@ -14,7 +14,7 @@ function HouseContainer(props) {
 
     // fetch list of house users from backend
     useEffect(() => {
-        fetch('/users.json')
+        fetch('http://localhost:5000/user/serve')
         .then((res) => res.json())
         .then((data) => {
             setData(data);

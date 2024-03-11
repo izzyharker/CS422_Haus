@@ -1,2 +1,6 @@
 Chore ID,Chore Name,Description,Category,Expected Duration,Status,Assignee ID,Deadline Date,Frequency,Completion Date
-49d3382c-5e66-4d8f-869c-444ccb80ebbb,Wash Dishes,Throw them in tehe dishwasher,Kitchen,15,unassigned,,2024-03-15,7,
+49d3382c-5e66-4d8f-869c-444ccb80ebbb,Wash Dishes,Throw them in tehe dishwasher,Kitchen,15,completed,3481406b-f6c5-48d4-b205-8dcd8fe7a43d,2024-03-15,7,2024-03-11
+77305da9-668d-4c70-b0a9-66c5be8c7da1,TestChore!,descriptive description,,10,completed,3481406b-f6c5-48d4-b205-8dcd8fe7a43d,,3,2024-03-11
+d2d6d05c-a265-4a65-a113-a5afe7c379cd,Another one,More,,10,completed,3481406b-f6c5-48d4-b205-8dcd8fe7a43d,,5,2024-03-11
+d957be2a-924f-4835-bb1f-aec5e7494d35,New Chore!,desc,,10,unassigned,,,6,
+cfa1197e-8fc1-4a73-919d-6ba2fd5a7868,asd,fadsfa,,10,unassigned,,,3,

@@ -354,7 +354,7 @@ def rank_chores(OCCUPANTS_FILEPATH, CHORES_FILEPATH, CHORE_RANKINGS_FILEPATH):
                         , rankings)
 
 
-def retrieve_occupants_names_and_uids(OCCUPANTS_FILEPATH):
+def retrieve_occupants_names_and_uids(OCCUPANTS_FILEPATH) -> dict[str, str]:
     occupants = {}
     with open(OCCUPANTS_FILEPATH, mode='r') as file:
         reader = csv.reader(file)
@@ -370,6 +370,18 @@ def retrieve_occupants_names_and_uids(OCCUPANTS_FILEPATH):
                 occupants[row[1]] = row[2]
         """
     return occupants
+
+def retrieve_occupant_uid_from_username(username, OCCUPANTS_FILEPATH):
+    """
+    Returns the first instance of a uid matching the input username
+    """
+    with open(OCCUPANTS_FILEPATH, mode='r') as file:
+        reader = csv.reader(file)
+        next(reader)  # Skip the header
+
+        for row in reader:
+            if row[1] == username:
+                return row[0]
 
 
 def add_or_remove_chores(CHORES_FILEPATH):
@@ -492,7 +504,7 @@ def get_chores_by_filters(assignee_id: str = None,
     return matching_chores
 
 
-def get_user_ids() -> 'list[str]':
+def get_user_ids() -> list[str]:
     """
     Return a list of all user IDs in the database.
     """
@@ -530,6 +542,43 @@ def new_chore_by_object(chore: Chore) -> None:
         writer.writeheader()
         writer.writerows(lines)
 
+def new_chore_by_args(name: str,
+                      desc: str, 
+                      id: Union[str, None] = None,
+                      category: str = "", 
+                      duration: int = 10, 
+                      status: Union[CHORE_STATUS, None] = CHORE_STATUS.UNASSIGNED, 
+                      assignee_id: Union[str, None] = None,
+                      deadline_date: Union[date, None] = None,
+                      frequency: int = 0,
+                      completion_date: Union[date, None] = None):
+    # If chore doesn't have an id, generate a unique one
+    if not id:
+        id = generate_uid()
+    
+    # read existing chores to check that it does not already exist (based on id)
+    with open(CHORES_FILEPATH, 'r') as file:
+        reader = csv.DictReader(file)
+        lines = list(reader)
+    for line in lines:
+        if line["Chore ID"] == id:
+            raise ValueError("Chore ID already exists in database")
+    csv_row = {
+            'Chore ID': id,
+            'Chore Name': name,
+            'Description': desc,
+            'Category': category,
+            'Expected Duration': duration,
+            'Status': status,
+            'Assignee ID': assignee_id,
+            'Deadline Date': deadline_date,
+            'Frequency': frequency,
+            'Completion Date': completion_date
+    }
+    new_chore = Chore(csv_row)
+    new_chore_by_object(new_chore)
+    
+    
 
 def update_chore_by_object(chore: Chore) -> None:
     """

@@ -29,6 +29,35 @@ function App() {
 	// API call: this needs to login the correct user
     const submitLogin = (event) => {
         event.preventDefault()
+
+		var login_data = new FormData()
+        login_data.append('user', username)
+        login_data.append('pass', password)
+        fetch("http://localhost:5000/user/login", {
+			method: 'POST',
+			mode: 'cors',
+			body: login_data
+        }).then(
+            response => response.json()
+        ).then(
+            data => {
+                if (data.user_exists) {
+					if (data.pass_valid) {
+						// Successful login
+						setLogin(true)
+						localStorage.setItem("user", username)
+					}
+					else {
+						// Invalid password
+						setErrorMessages({ name: "pass", message: errors.pass });
+					}
+                }
+                else {
+					// Username not found
+					setErrorMessages({ name: "uname", message: errors.uname });
+                }
+            }
+        )
 		// this will be the fetch method
 		// const userData = database.find((user) => user.username === username);
 
@@ -47,10 +76,10 @@ function App() {
 		// }
 
 		// set login to true
-		setLogin(true)
+		// setLogin(true)
 
 		// update browser storage to the current user
-		localStorage.setItem("user", "default")
+		// localStorage.setItem("user", "default")
     }
 
 	// display the correct error messages
@@ -61,6 +90,14 @@ function App() {
 
 	// create a new user account for the haus (also logs in upon submission)
 	const createAccount = (event) => {
+		var login_data = new FormData()
+		login_data.append('user', username)
+		login_data.append('pass', password)
+		fetch("http://localhost:5000/user/create", {
+			method: 'POST',
+			mode: 'cors',
+			body: login_data
+        })
 		// API post to create new account
 		setLogin(true)
 
