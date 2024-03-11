@@ -475,7 +475,7 @@ def get_chores_by_filters(assignee_id: str = None,
     return matching_chores
 
 
-def get_user_ids() -> list[str]:
+def get_user_ids() -> 'list[str]':
     """
     Return a list of all user IDs in the database.
     """

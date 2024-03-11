@@ -29,7 +29,6 @@ function App() {
 	// API call: this needs to login the correct user
     const submitLogin = (event) => {
         event.preventDefault()
-
 		// this will be the fetch method
 		// const userData = database.find((user) => user.username === username);
 
