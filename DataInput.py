@@ -10,12 +10,15 @@ Outputs:
 - JSON files for Houses, Roommates, and Chores
 """
 
+# python libraries
 import json
 import csv
 import uuid
 from datetime import datetime, date
-from enum import Enum
+
+# enhanced typing
 from typing import Union
+from enum import Enum
 
 # Constant definitions
 
@@ -28,13 +31,17 @@ CHORE_ATTRIBUTES = ['Chore ID',
                     'Status',
                     'Assignee ID',
                     'Deadline Date',
+                    'Frequency',
                     'Completion Date']
+
 
 # Symbolic constants for chore statuses
 class CHORE_STATUS(Enum):
-    UNASSIGNED = "unassigned"
-    ASSIGNED = "assigned"
-    COMPLETED = "completed"
+    UNASSIGNED = "unassigned"  # chore is newly created
+    ASSIGNED = "assigned"  # chore has been assigned to a user
+    COMPLETED = "completed"  # chore has been completed by that user
+    RENEWED = "renewed"  # (of repeating chores) chore is renewed and should not be renewed again
+
 
 # Chore CSV file location
 CHORES_FILEPATH = 'csvs/chores.csv'
@@ -47,6 +54,7 @@ CHORE_RANKINGS_FILEPATH = 'csvs/chore_rankings.csv'
 
 # date format to be used in all CSVs
 DATE_FORMAT = '%Y-%m-%d'
+
 
 class Chore:
     """
@@ -62,6 +70,7 @@ class Chore:
     status: CHORE_STATUS
     assignee_id: Union[str, None]
     deadline_date: Union[date, None]
+    frequency: int
     completion_date: Union[date, None]
 
     def __init__(self, csv_chore_row: dict):
@@ -77,6 +86,7 @@ class Chore:
         self.assignee_id = csv_chore_row["Assignee ID"]
         self.deadline_date = datetime.strptime(csv_chore_row["Deadline Date"], DATE_FORMAT).date() \
             if csv_chore_row["Deadline Date"] else None
+        self.frequency = int(csv_chore_row["Frequency"]) if csv_chore_row["Frequency"] else 0
         self.completion_date = datetime.strptime(csv_chore_row["Completion Date"], DATE_FORMAT).date() \
             if csv_chore_row["Completion Date"] else None
 
@@ -91,8 +101,26 @@ class Chore:
         Status: {self.status.value}
         Assignee ID: {self.assignee_id}
         Deadline Date: {self.deadline_date}
+        Frequency: {self.frequency}
         Completion Date: {self.completion_date}
         """
+
+    def to_csv_row(self) -> dict[str, str]:
+        """
+        Return a dict representing the chore's attribute as a CSV row for the database.
+        """
+        return {
+            "Chore ID": self.id,
+            "Chore Name": self.name,
+            "Description": self.description,
+            "Category": self.category,
+            "Expected Duration": str(self.expected_duration),
+            "Status": self.status.value,
+            "Assignee ID": self.assignee_id,
+            "Deadline Date": self.deadline_date.strftime(DATE_FORMAT) if self.deadline_date else "",
+            "Frequency": str(self.frequency),
+            "Completion Date": self.completion_date.strftime(DATE_FORMAT) if self.completion_date else ""
+        }
 
 
 def convert_csv_to_json(csv_filename, json_filename):
@@ -182,6 +210,7 @@ def get_haus_info():
 
     return haus_name, haus_type, num_people
 
+
 def get_username_list(filename):
     """Returns the list of usernames stored in the occupants CSV file"""
     current_usernames = []
@@ -189,22 +218,24 @@ def get_username_list(filename):
         reader = csv.reader(file)
         for row in reader:
             current_usernames.append(row[1])
-        
+
     # trim Username header        
     current_usernames = current_usernames[1:]
 
     return current_usernames
+
 
 def get_password(filename, username):
     """Returns the password for a given username from the occupants CSV file"""
     with open(filename, mode='r', newline='') as file:
         reader = csv.reader(file)
         for row in reader:
-             if row[1] == username:
+            if row[1] == username:
                 return row[2]
-             
+
     # username isn't valid, so return nothing
-             
+
+
 def add_occupant_name(filename, occupant_uid, occupant_username, occupant_password):
     """Adds a username and password to the occupants CSV file. Also generates a UID for the new user.
     Note: does not verify if this name already exists. That functionality is covered in the login.py module
@@ -296,7 +327,7 @@ def rank_chores(OCCUPANTS_FILEPATH, CHORES_FILEPATH, CHORE_RANKINGS_FILEPATH):
                 print("Invalid rank. Please enter 0, 1, or 2.")
 
     save_chore_rankings(CHORE_RANKINGS_FILEPATH
-, rankings)
+                        , rankings)
 
 
 def retrieve_occupants_names_and_uids(OCCUPANTS_FILEPATH):
@@ -382,10 +413,11 @@ def list_chores(CHORES_FILEPATH):
 
 def save_chore_rankings(CHORE_RANKINGS_FILEPATH, rankings):
     with open(CHORE_RANKINGS_FILEPATH
-, mode='a', newline='') as file:
+            , mode='a', newline='') as file:
         writer = csv.writer(file)
         for ranking in rankings:
             writer.writerow(ranking)
+
 
 # getter functions, for user by other modules importing this one
 
@@ -405,30 +437,35 @@ def get_chore_by_id(id: str):
     chore = Chore(found_csv_row)
     return chore
 
+
 def get_chores_by_filters(assignee_id: str = None,
-               status: CHORE_STATUS = None,
-               min_deadline_date: date = None,
-               max_deadline_date : date = None) -> list[Chore]:
+                          status: CHORE_STATUS = None,
+                          min_deadline_date: date = None,
+                          max_deadline_date: date = None,
+                          repeating_only: bool = False
+                          ) -> list[Chore]:
     """
     Return a list of Chore objects matching the given filters.
     The list will be empty if none of the chores in the database match.
     """
     matching_chores = []
-    file = open(CHORES_FILEPATH, 'r')
-    reader = csv.DictReader(file)
-    for row in reader:
-        chore = Chore(row)
-        if status and chore.status != status:
-            continue
-        if assignee_id and chore.assignee_id != assignee_id:
-            continue
-        if min_deadline_date and (not chore.deadline_date or chore.deadline_date < min_deadline_date):
-            continue
-        if max_deadline_date and (not chore.deadline_date or chore.deadline_date > max_deadline_date):
-            continue
-        matching_chores.append(Chore(row))
-    file.close()
+    with open(CHORES_FILEPATH, 'r') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            chore = Chore(row)
+            if repeating_only and (not chore.frequency or chore.frequency == 0):
+                continue
+            if status and chore.status != status:
+                continue
+            if assignee_id and chore.assignee_id != assignee_id:
+                continue
+            if min_deadline_date and (not chore.deadline_date or chore.deadline_date < min_deadline_date):
+                continue
+            if max_deadline_date and (not chore.deadline_date or chore.deadline_date > max_deadline_date):
+                continue
+            matching_chores.append(Chore(row))
     return matching_chores
+
 
 def get_user_ids() -> list[str]:
     """
@@ -442,36 +479,89 @@ def get_user_ids() -> list[str]:
     file.close()
     return user_ids
 
-def update_chore(chore: Chore) -> None:
+
+def new_chore_by_object(chore: Chore) -> None:
+    """
+    Given a Chore object, add a new entry to the CSV database.
+    The Chore object may or may not have an ID already.
+    If not, a new ID will be generated for it.
+    """
+    # if chore does not have an id, generate a unique one
+    if not chore.id:
+        chore.id = generate_uid()
+
+    # read existing chores to check that it does not already exist (based on id)
+    with open(CHORES_FILEPATH, 'r') as file:
+        reader = csv.DictReader(file)
+        lines = list(reader)
+    for line in lines:
+        if line["Chore ID"] == chore.id:
+            raise ValueError("Chore ID already exists in database")
+
+    # add new chore to the list and write back to the file
+    lines.append(chore.to_csv_row())
+    with open(CHORES_FILEPATH, 'w', newline='') as file:
+        writer = csv.DictWriter(file, fieldnames=CHORE_ATTRIBUTES)
+        writer.writeheader()
+        writer.writerows(lines)
+
+
+def update_chore_by_object(chore: Chore) -> None:
     """
     Given a Chore object, update the CSV database entry to match object's attributes.
     If the chore does not exist (no ID or ID not in CSV database), throw error.
     """
     # find the chore in the CSV database by id
-    file = open(CHORES_FILEPATH, 'r')
-    reader = csv.DictReader(file)
-    lines = list(reader)
-    for line in lines:
-        if line["Chore ID"] == chore.id:
+    with open(CHORES_FILEPATH, 'r') as file:
+        reader = csv.DictReader(file)
+        lines = list(reader)
+    chore_found = False
+    for i in range(len(lines)):
+        if lines[i]["Chore ID"] == chore.id:
+            chore_found = True
             # update the line with the new chore attributes
-            line["Chore Name"] = chore.name
-            line["Description"] = chore.description
-            line["Category"] = chore.category
-            line["Expected Duration"] = chore.expected_duration
-            line["Status"] = chore.status.value
-            line["Assignee ID"] = chore.assignee_id
-            line["Deadline Date"] = chore.deadline_date.strftime(DATE_FORMAT) \
-                if chore.deadline_date else ""
-            line["Completion Date"] = chore.completion_date.strftime(DATE_FORMAT) \
-                if chore.completion_date else ""
+            lines[i] = chore.to_csv_row()
             break
-    file.close()
+    if not chore_found:
+        raise ValueError("Chore ID not found in database")
+
     # write everything back to the file
-    file = open(CHORES_FILEPATH, 'w', newline='')
-    writer = csv.DictWriter(file, fieldnames=CHORE_ATTRIBUTES)
-    writer.writeheader()
-    writer.writerows(lines)
-    file.close()
+    with open(CHORES_FILEPATH, 'w', newline='') as file:
+        writer = csv.DictWriter(file, fieldnames=CHORE_ATTRIBUTES)
+        writer.writeheader()
+        writer.writerows(lines)
+
+
+def set_chore_complete(chore_id: str) -> None:
+    """
+    Change the status of the chore with the given id to completed.
+    This also sets the "Completion Date" attribute to the current date.
+    Updates the chores.csv database file accordingly.
+    """
+    # find the chore in the CSV database by id
+    with open(CHORES_FILEPATH, 'r') as file:
+        reader = csv.DictReader(file)
+        lines = list(reader)
+    chore_found = False
+    for i in range(len(lines)):
+        if lines[i]["Chore ID"] == chore_id:
+            chore_found = True
+            # make sure the chore is assigned and has an assignee ID
+            if lines[i]["Status"] != CHORE_STATUS.ASSIGNED.value:
+                raise ValueError("Chore must first be assigned to be completed")
+            if not lines[i]["Assignee ID"]:
+                raise ValueError("Chore must first be assigned to someone to be completed")
+            # update the line with the new chore attributes
+            lines[i]["Status"] = CHORE_STATUS.COMPLETED.value
+            lines[i]["Completion Date"] = date.today().strftime(DATE_FORMAT)
+            break
+    if not chore_found:
+        raise ValueError("Chore ID not found in database")
+    # write everything back to the file
+    with open(CHORES_FILEPATH, 'w', newline='') as file:
+        writer = csv.DictWriter(file, fieldnames=CHORE_ATTRIBUTES)
+        writer.writeheader()
+        writer.writerows(lines)
 
 
 # FIXME We are not using category preferences for now, either remove or reinstate later in development
@@ -496,7 +586,7 @@ def main():
     # ensure_csv_headers(dwelling_file, ['House Name', 'House Type', 'Num Occupants'])
     ensure_csv_headers(OCCUPANTS_FILEPATH, ['Occupant UID', 'Username', 'Password'])
     ensure_csv_headers(CHORE_RANKINGS_FILEPATH
-, ['Occupant UID', 'Chore UID', 'Rank'])
+                       , ['Occupant UID', 'Chore UID', 'Rank'])
     initialize_chores(CHORES_FILEPATH)
     ensure_csv_headers(CHORES_FILEPATH, CHORE_ATTRIBUTES)
 
@@ -533,7 +623,7 @@ def main():
         #     add_occupant_names(OCCUPANTS_FILEPATH)
         if choice == '2':
             rank_chores(OCCUPANTS_FILEPATH, CHORES_FILEPATH, CHORE_RANKINGS_FILEPATH
-        )
+                        )
             break
         elif choice == '3':
             add_or_remove_chores(CHORES_FILEPATH)
@@ -542,7 +632,6 @@ def main():
             break
         else:
             print("Invalid selection. Please choose again.")
-
 
 
 if __name__ == "__main__":
