@@ -1,3 +1,9 @@
+/*
+Author: Izzy Harker
+Date updated: 3/9/24
+Description: Contains and exports the App function, which acts as the top-level controller for the entire website. 
+*/
+
 import './App.css'
 import "./components/NavBar/NavBar"
 import NavBar from './components/NavBar/NavBar'
@@ -6,31 +12,22 @@ import HouseContainer from "./components/House/HouseContainer"
 import { useEffect, useState } from 'react'
 
 function App() {
+	// create state information
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
 	const [user, setUser] = useState()
 	const [isLoggedIn, setLogin] = useState(false)
 	const [errorMessages, setErrorMessages] = useState({})
 	const [create, setCreate] = useState(false)
-
-	// const database = [
-	// 	{
-	// 		username: "user1",
-	// 		password: "pass1"
-	// 	},
-	// 	{
-	// 		username: "user2",
-	// 		password: "pass2"
-	// 	}
-	// ];
 	  
+	// error messages for login clarity
 	const errors = {
 		uname: "x Invalid username",
 		pass: "x Invalid password"
 	};
 
 	// API call: this needs to login the correct user
-    const handleSubmit = (event) => {
+    const submitLogin = (event) => {
         event.preventDefault()
 
 		// this will be the fetch method
@@ -50,15 +47,20 @@ function App() {
 		// 	setErrorMessages({ name: "uname", message: errors.uname });
 		// }
 
+		// set login to true
 		setLogin(true)
+
+		// update browser storage to the current user
 		localStorage.setItem("user", "default")
     }
 
+	// display the correct error messages
 	const renderErrorMessage = (name) =>
 		name === errorMessages.name && (
 		<div className="error">{errorMessages.message}</div>
     );
 
+	// create a new user account for the haus (also logs in upon submission)
 	const createAccount = (event) => {
 		// API post to create new account
 		setLogin(true)
@@ -67,11 +69,12 @@ function App() {
 		localStorage.setItem("user", username)
 	}
 
+	// contains the login form information, username and password, as well as an option to create an account
     const loginForm = (
         <div className="login">
 			<div className="form">
 				<h1>Enter HAUS</h1>
-				<form onSubmit={handleSubmit}>
+				<form onSubmit={submitLogin}>
 					<div className="input-container">
 						<label>Username </label>
 						<input 
@@ -101,6 +104,7 @@ function App() {
         </div>
     );
 
+	// prompts for username/password to create an account. Also has an option to cancel and go back to login screen.
 	const createAcctForm = (
         <div className="login">
 			<div className="form">
@@ -114,7 +118,6 @@ function App() {
 							required
 							onChange={({ target }) => setUsername(target.value)}
 						/>
-						{/* {renderErrorMessage("uname")} */}
 					</div>
 					<div className="input-container">
 						<label>Password </label>
@@ -124,7 +127,6 @@ function App() {
 							required
 							onChange={({ target }) => setPassword(target.value)}	
 						/>
-						{/* {renderErrorMessage("pass")} */}
 					</div>
 					<div className="button-container">
 						<input type="submit" value="Create Account"/>
@@ -135,6 +137,7 @@ function App() {
         </div>
     );
 
+	// checks whether there is a logged-in user on reload or page opening
 	useEffect(() => {
 		const loggedInUser = localStorage.getItem("user");
 		if (loggedInUser) {
@@ -144,6 +147,7 @@ function App() {
 		else setLogin(false);
 	}, []);
 
+	// returns page information
 	return (
 		<>
 		<div className="haus">

@@ -1,8 +1,15 @@
+/*
+Author: Izzy Harker
+Date updated: 3/9/24
+Description: Contains and exports the HouseDetails function, which displays the users and allows one to add a new chore or delete their account.
+*/
+
 import "./HouseContainer.css"
 import {useState} from 'react';
 import logo from "./user_icon.png"
 
 function HouseDetails(props) {
+    // create state elements
     const [addChore, showAddChore] = useState(false)
     const [choreName, setChoreName] = useState("")
     const [choreDesc, setChoreDesc] = useState("")
@@ -10,20 +17,31 @@ function HouseDetails(props) {
 	const [delPass, setDelPass] = useState(false)
     const [errorMessages, setErrorMessages] = useState({})
 
+    // error message for incorrect password
+    const errors = {
+		pass: "x Invalid password"
+	};
 
-    const handleSubmit = (e) => {
+    // handles the submission for the add chore form
+    const submitAddChore = (e) => {
         // API post with form data 
 
         console.log("added chore")
+
+        // stop displaying form
         showAddChore(false)
     }
 
+    // display the correct error message, returns a div containing the error
     const renderErrorMessage = (name) =>
+        // check that the given name is the current message and return the div
 		name === errorMessages.name && (
 		<div className="error">{errorMessages.message}</div>
     );
 
+    // handles the submission for the delete account form
     const deleteAccount = (pass) => {
+        // stop displaying form
 		setDelPass(false)
 
 		if (true) {
@@ -31,20 +49,25 @@ function HouseDetails(props) {
 
 			// remove from browser storage
 			localStorage.removeItem("user")
+
+            // logout
 			setLogin(false)
 		}
 		else {
+            // set the error message on incorrect password and do nothing
 			setErrorMessages({ name: "pass", message: errors.pass });
 		}
 	}
 
-    // console.log(props.houseData)
+    // form to add a chore to the haus
+    // contains name, description, and frequency fields
+    // submit button and close form button are also set. 
     const addChoreForm = (
         <div className="popup-form">
             <div className="add-chore user-form">
                 <div className="form">
                     <h1>Add new chore</h1>
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={submitAddChore}>
                         <div className="input-container">
                             <label>Chore name</label>
                             <input 
@@ -85,6 +108,9 @@ function HouseDetails(props) {
         </div>
     );
 
+    // form to delete account
+    // contains password field and submit button
+    // also has button to exit, as well as a warning about the action. 
     const delAcctForm = (
         <div className="popup-form">
             <div className="add-chore user-form">
@@ -114,23 +140,21 @@ function HouseDetails(props) {
         </div>
     );
 
+    // function returns users and buttons for adding a chore and deleting an account
+    // the add chore and delete account forms are shown conditionally
     return (
         <div className="house-details">
             {delPass && 
                 <div className="del-pass">
                     {delAcctForm}
                 </div>}
-                
-            <h1>{props.houseName}</h1>
-
-            <div className="add-chore">
-                <button onClick={() => showAddChore(true)}>Add chore</button>
-            </div>
 
             {addChore && 
             (<div className="add-chore-form">
                 {addChoreForm}
             </div>)}
+
+            <h1>{props.houseName}</h1>
 
             {props.houseData &&
             (<div className="house-occupants">
@@ -142,7 +166,11 @@ function HouseDetails(props) {
                     </div>)}
             </div>)}
 
-            <div className="delete-acct">
+            <div className="add-chore">
+                <button onClick={() => showAddChore(true)}>Add chore</button>
+            </div>
+
+            <div className="add-chore">
 					<button onClick={() => setDelPass(true)}>Delete Account</button>
 			</div>
         </div>

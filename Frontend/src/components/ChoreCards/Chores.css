@@ -1,3 +1,9 @@
+/* 
+Author: Izzy Harker
+Date updated: 3/9/24
+Description: Contains styling information for ChoreContainer.jsx and ChoreList.jsx 
+*/
+
 .chore-container {
     flex: 1;
     display: flex;

@@ -1,8 +1,8 @@
-add warning to delete (irreversible action)
+X add warning to delete (irreversible action)
 
 user documentation
 
-code comments
+X code comments
 
 fetch/post methods - 
 logout

@@ -1,17 +1,19 @@
-// user profile button
+/*
+Author: Izzy Harker
+Date updated: 3/9/24
+Description: Contains and exports the Logout function, which creates a button to logout the user. 
+*/
 
-function logout() {
-    localStorage.clear()
-    console.log("logging out")
-    window.location.reload()
-}
 
 function Logout(props) {
-    // API: delete user account
+    // API: reset user account
     return (
         <button className="user-profile" onClick={() => {
+            // clear browser cache
             localStorage.clear()
-            props.setLogin()
+
+            // set logged in to false
+            props.setLogin(false)
         }}>
             Logout
         </button>

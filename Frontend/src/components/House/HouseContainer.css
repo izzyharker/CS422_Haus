@@ -1,14 +1,17 @@
 /*
+Author: Izzy Harker
+Date updated: 3/9/24
+Description: Contains styling information for HouseContainer and HouseDetails 
+*/
+
+/*
+Color palette:
 light green: #00b300
 dark green: #125212
 purple: #8592dd
 dark gray: #202020
 whiteish: #d7e3d4
 */
-
-/* * {
-    border: 1px solid red;
-} */
 
 .house {
     flex: 2;
