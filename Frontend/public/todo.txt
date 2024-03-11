@@ -1,4 +1,15 @@
-user login screen
-remove settings and add user buttons
-list of what i need from andrew [done]
-instructions for installing/setting up frontend [done]
+X add warning to delete (irreversible action)
+
+user documentation
+
+X code comments
+
+fetch/post methods - 
+logout
+delete user
+login
+list of house users
+chore list
+complete chore
+add chore
+create user

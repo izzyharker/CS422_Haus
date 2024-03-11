@@ -1,23 +1,18 @@
-import "./ChoreCards.css"
+/*
+Author: Izzy Harker
+Date updated: 3/9/24
+Description: Contains and exports the ChoreContainer function, which creates the main div for the chore visualization. 
+*/
+
+import "./Chores.css"
 import ChoreList from "./ChoreList"
-import { useState, useEffect } from 'react';
 
 function ChoreContainer() {
-    const [data, setData] = useState([]);
-
-    useEffect(() => {
-        fetch('/chores.json')
-        .then((res) => res.json())
-        .then((data) => {
-            // console.log(data);
-            setData(data);
-        });
-    }, []);
-
+    // top-level container for showing the chores
+    // returns flex div containing the ChoreList
     return (
         <div className="chore-container">
-            <ChoreList myChores={true} chores={data}/>
-            {/* <ChoreList myChores={false} chores={null}/> */}
+            <ChoreList/>
         </div>
     )
 }

@@ -1,22 +1,178 @@
+/*
+Author: Izzy Harker
+Date updated: 3/9/24
+Description: Contains and exports the HouseDetails function, which displays the users and allows one to add a new chore or delete their account.
+*/
+
 import "./HouseContainer.css"
-import HouseOccupant from "./HouseOccupant"
-import AddChore from "./AddChore"
-import AddUser from "./AddUser"
+import {useState} from 'react';
+import logo from "./user_icon.png"
 
 function HouseDetails(props) {
-    // console.log(props.houseData)
+    // create state elements
+    const [addChore, showAddChore] = useState(false)
+    const [choreName, setChoreName] = useState("")
+    const [choreDesc, setChoreDesc] = useState("")
+    const [freq, setFreq] = useState(3)
+	const [delPass, setDelPass] = useState(false)
+    const [errorMessages, setErrorMessages] = useState({})
 
+    // error message for incorrect password
+    const errors = {
+		pass: "x Invalid password"
+	};
+
+    // handles the submission for the add chore form
+    const submitAddChore = (e) => {
+        // API post with form data 
+
+        console.log("added chore")
+
+        // stop displaying form
+        showAddChore(false)
+    }
+
+    // display the correct error message, returns a div containing the error
+    const renderErrorMessage = (name) =>
+        // check that the given name is the current message and return the div
+		name === errorMessages.name && (
+		<div className="error">{errorMessages.message}</div>
+    );
+
+    // handles the submission for the delete account form
+    const deleteAccount = (pass) => {
+        // stop displaying form
+		setDelPass(false)
+
+		if (true) {
+			// remove from backend (API)
+
+			// remove from browser storage
+			localStorage.removeItem("user")
+
+            // logout
+			setLogin(false)
+		}
+		else {
+            // set the error message on incorrect password and do nothing
+			setErrorMessages({ name: "pass", message: errors.pass });
+		}
+	}
+
+    // form to add a chore to the haus
+    // contains name, description, and frequency fields
+    // submit button and close form button are also set. 
+    const addChoreForm = (
+        <div className="popup-form">
+            <div className="add-chore user-form">
+                <div className="form">
+                    <h1>Add new chore</h1>
+                    <form onSubmit={submitAddChore}>
+                        <div className="input-container">
+                            <label>Chore name</label>
+                            <input 
+                                type="text" 
+                                name="name" 
+                                required
+                                onChange={({ target }) => setChoreName(target.value)}
+                            />
+                        </div>
+                        <div className="input-container">
+                            <label>Chore description</label>
+                            <input 
+                                type="text" 
+                                name="desc" 
+                                optional
+                                onChange={({ target }) => setChoreDesc(target.value)}	
+                            />
+                        </div>
+                        <div className="input-container">
+                            <label>Chore frequency (days)</label>
+                            <input 
+                                type="number" 
+                                name="freq" 
+                                placeholder="3 days"
+                                optional
+                                onChange={({ target }) => setFreq(target.value)}	
+                            />
+                        </div>
+                        <div className="button-container">
+                            <input type="submit" value="Submit"/>
+                        </div>
+                    </form>
+                </div>
+                <div className="exit-form">
+                    <button onClick={() => showAddChore(false)}>X</button>
+                </div>
+            </div>
+        </div>
+    );
+
+    // form to delete account
+    // contains password field and submit button
+    // also has button to exit, as well as a warning about the action. 
+    const delAcctForm = (
+        <div className="popup-form">
+            <div className="add-chore user-form">
+                <div className="form">
+                    <h1>Enter password to delete account</h1>
+                    <div className="del-warning">Warning: this action is irreversible!</div>
+                    <form onSubmit={deleteAccount}>
+                        <div className="input-container">
+                            <label>Password </label>
+                            <input 
+                                type="password" 
+                                name="pass" 
+                                required
+                                onChange={({ target }) => setPassword(target.value)}	
+                            />
+                            {renderErrorMessage("pass")}
+                        </div>
+                        <div className="button-container">
+                            <input type="submit" value="Delete Account"/>
+                        </div>
+                    </form>
+                </div>
+                <div className="exit-form">
+                    <button onClick={() => setDelPass(false)}>X</button>
+                </div>
+            </div>
+        </div>
+    );
+
+    // function returns users and buttons for adding a chore and deleting an account
+    // the add chore and delete account forms are shown conditionally
     return (
         <div className="house-details">
+            {delPass && 
+                <div className="del-pass">
+                    {delAcctForm}
+                </div>}
+
+            {addChore && 
+            (<div className="add-chore-form">
+                {addChoreForm}
+            </div>)}
+
             <h1>{props.houseName}</h1>
 
             {props.houseData &&
             (<div className="house-occupants">
                 {props.houseData.map((user) => 
-                    <HouseOccupant key={user["UserID"]} username={user["name"]} />)}
-
+                    // <HouseOccupant key={user["UserID"]} username={user["name"]} />
+                    <div key={user["UserID"]} className="occupant">
+                        <img src={logo}/>
+                        <div>{user["name"]}</div>
+                    </div>)}
             </div>)}
-            <AddChore />
+
+            <div className="add-chore">
+                <button onClick={() => showAddChore(true)}>Add chore</button>
+            </div>
+
+            <div className="add-chore">
+					<button onClick={() => setDelPass(true)}>Delete Account</button>
+			</div>
         </div>
     )
 }

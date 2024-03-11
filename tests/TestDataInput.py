@@ -47,6 +47,7 @@ class TestChore(unittest.TestCase):
             "Status": "unassigned",
             "Assignee ID": "",
             "Deadline Date": "2024-03-05",
+            "Frequency": 7,
             "Completion Date": "",
         }
         # create a Chore object from the csv_chore_row
@@ -62,6 +63,7 @@ class TestChore(unittest.TestCase):
             (chore.status, DataInput.CHORE_STATUS.UNASSIGNED),
             (chore.assignee_id, None),
             (chore.deadline_date, date(2024, 3, 5)),
+            (chore.frequency, 7),
             (chore.completion_date, None)
         ]
         for attribute, expected_value in expected:
@@ -126,6 +128,7 @@ class TestGetFunctions(unittest.TestCase):
             (chore.status, DataInput.CHORE_STATUS.UNASSIGNED),
             (chore.assignee_id, None),
             (chore.deadline_date, date(2024, 3, 11)),
+            (chore.frequency, 3),
             (chore.completion_date, None)
         ]
         for attribute, expected_value in expected_matches:
@@ -330,7 +333,7 @@ class TestSetFunctions(unittest.TestCase):
                 logging.debug(f"No file to restore: {old_name}")
         logging.debug("Restored files in tearDown")
 
-    def test_update_chore(self):
+    def test_update_chore_by_object(self):
         """
         This method tests the update_chore function.
         We check the attributes of a chore, update them, and check again.
@@ -346,7 +349,7 @@ class TestSetFunctions(unittest.TestCase):
         chore.name = "Hoover"
         chore.status = DataInput.CHORE_STATUS.ASSIGNED
         chore.assignee_id = "95454c41-dc2f-451e-97b5-1d53b31cfa16"
-        DataInput.update_chore(chore)
+        DataInput.update_chore_by_object(chore)
         # now check again to make sure the attributes in the chores file are as expected
         updated_chore: DataInput.Chore = DataInput.get_chore_by_id("7cb263c2-52f5-4077-971e-491d3d19ed29")
         self.assertEqual(updated_chore.name, "Hoover")
