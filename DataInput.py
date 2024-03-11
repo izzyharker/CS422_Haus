@@ -127,6 +127,23 @@ class Chore:
             "Completion Date": self.completion_date.strftime(DATE_FORMAT) if self.completion_date else ""
         }
 
+def json_to_chore_object(json_filepath: str) -> Chore:
+    """
+    Return a Chore object from a JSON object at the given filepath.
+    The JSON object must have all the attributes of a row in the chores.csv database.
+
+    e.g.
+    {
+    "Chore ID": "49d3382c-5e66-4d8f-869c-444ccb80ebbb",
+    "Chore Name": "My Chore",
+    ...
+    "Completion Deadline": "2024-03-05"
+    }
+    """
+    with open(json_filepath, 'r') as file:
+        json_chore = json.load(file)
+    return Chore(json_chore)
+
 
 def convert_csv_to_json(csv_filename, json_filename):
     """ Converts CSV to JSON for Flask/React """
@@ -603,12 +620,6 @@ def main():
     # Convert 'occupants.csv' to 'occupants.json'
     convert_csv_to_json('csvs/occupants.csv', 'jsons/occupants.json')
     # Convert 'chores.csv' to 'chores.json'
-    convert_csv_to_json('csvs/chores.csv', 'jsons/chores.json')
-    # Convert 'chore_rankings.csv' to 'chore_rankings.json'
-    convert_csv_to_json('csvs/chore_rankings.csv', 'jsons/chore_rankings.json')
-
-    # Main menu loop
-    # Removed option to add a house
     while True:
         print("\nMenu:")
         # print("1. Add a new Haus")
