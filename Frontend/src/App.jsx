@@ -188,7 +188,7 @@ function App() {
 	return (
 		<>
 		<div className="haus">
-			<NavBar renderButtons={isLoggedIn} setLogin={setLogin} />
+			<NavBar renderButtons={isLoggedIn} user={username} setLogin={setLogin} />
 
 		{(isLoggedIn) ? <>
 				<div className="haus-content">
