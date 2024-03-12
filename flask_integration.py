@@ -18,6 +18,13 @@ app = Flask(__name__, static_folder="Frontend/")
 # Create a secret key so that we can have session info
 app.secret_key = os.urandom(24)
 
+@app.after_request
+def after_request(response):
+    response.headers["Access-Control-Allow-Origin"] = "*" # <- You can change "*" for a domain for example "http://localhost"
+    response.headers["Access-Control-Allow-Credentials"] = "true"
+    response.headers["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS, PUT, DELETE"
+    response.headers["Access-Control-Allow-Headers"] = "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization"
+    return response
 
 # Endpoint for logging in as a user
 @app.route('/user/login', methods=['POST'])
