@@ -16,6 +16,7 @@ function HouseDetails(props) {
     const [freq, setFreq] = useState(3)
 	const [delPass, setDelPass] = useState(false)
     const [errorMessages, setErrorMessages] = useState({})
+    const [password, setPassword] = useState()
 
     // error message for incorrect password
     const errors = {
@@ -25,6 +26,8 @@ function HouseDetails(props) {
     // handles the submission for the add chore form
     const submitAddChore = (e) => {
         // API post with form data 
+        e.preventDefault()
+        
 		var chore_data = new FormData()
 		chore_data.append('Chore Name', choreName)
 		chore_data.append('Description', choreDesc)
@@ -49,13 +52,16 @@ function HouseDetails(props) {
     );
 
     // handles the submission for the delete account form
-    const deleteAccount = (pass) => {
+    const deleteAccount = (e) => {
         // stop displaying form
-		setDelPass(false)
+		// setDelPass(false)
+
+        e.preventDefault()
 
         var delete_data = new FormData()
         delete_data.append('user', localStorage.getItem("user"))
-        delete_data.append('pass', delPass)
+        delete_data.append('pass', password)
+        console.log(localStorage.getItem("user"), password)
         fetch("http://localhost:5000/user/delete", {
 			method: 'POST',
 			mode: 'cors',
@@ -66,6 +72,9 @@ function HouseDetails(props) {
             data => {
                 console.log(data)
                 if (data.success) {
+                    // stop displaying form
+                    setDelPass(false)
+
                     // remove from browser storage
                     localStorage.removeItem("user");
                     // logout
@@ -73,23 +82,11 @@ function HouseDetails(props) {
                 }
                 else {
                     // set the error message on incorrect password and do nothing
+                    // setDelPass(true)
                     setErrorMessages({ name: "pass", message: errors.pass });
                 }
             }
         )
-		// if (true) {
-		// 	// remove from backend (API)
-            
-		// 	// remove from browser storage
-		// 	localStorage.removeItem("user")
-
-        //     // logout
-		// 	setLogin(false)
-		// }
-		// else {
-        //     // set the error message on incorrect password and do nothing
-		// 	setErrorMessages({ name: "pass", message: errors.pass });
-		// }
 	}
 
     // form to add a chore to the haus
@@ -157,7 +154,7 @@ function HouseDetails(props) {
                                 type="password" 
                                 name="pass" 
                                 required
-                                onChange={({ target }) => setDelPass(target.value)}	
+                                onChange={({ target }) => setPassword(target.value)}	
                             />
                             {renderErrorMessage("pass")}
                         </div>
