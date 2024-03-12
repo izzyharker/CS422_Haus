@@ -23,7 +23,8 @@ function App() {
 	// error messages for login clarity
 	const errors = {
 		uname: "x Invalid username",
-		pass: "x Invalid password"
+		pass: "x Invalid password",
+		c_uname: "x Existing username"
 	};
 
 	// API call: this needs to login the correct user
@@ -90,6 +91,7 @@ function App() {
 
 	// create a new user account for the haus (also logs in upon submission)
 	const createAccount = (event) => {
+        event.preventDefault()
 		var login_data = new FormData()
 		login_data.append('user', username)
 		login_data.append('pass', password)
@@ -97,12 +99,21 @@ function App() {
 			method: 'POST',
 			mode: 'cors',
 			body: login_data
-        })
+        }).then(
+			response => response.json()
+		).then(
+			data => {
+				if (data.success) {
+					// login with new acct
+					setLogin(true)
+					localStorage.setItem("user", username)
+				}
+				else {
+					setErrorMessages({name : "c_uname", message: errors.c_uname})
+				}
+			}
+		)
 		// API post to create new account
-		setLogin(true)
-
-		// login with new acct
-		localStorage.setItem("user", username)
 	}
 
 	// contains the login form information, username and password, as well as an option to create an account
@@ -154,6 +165,7 @@ function App() {
 							required
 							onChange={({ target }) => setUsername(target.value)}
 						/>
+						{renderErrorMessage("c_uname")}
 					</div>
 					<div className="input-container">
 						<label>Password </label>
