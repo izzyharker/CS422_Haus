@@ -31,14 +31,27 @@ def create_user(username, password, occupant_filepath):
 
 
 def delete_user(username, password, occupant_filepath):
-    """Verifies that a user exists, then removes from the haus"""
-    pass
+    """Verifies that a user exists, then removes from the haus
+    Returns True is user both exists, and is deleted successfully, False otherwise.
+    """
+    # verify that the user exists
+    if not verify_user_exists(username, occupant_filepath):
+        return False
+    
+    # user exists
+    # verify they've entered the correct password to authenticate deleting their account
+    if password != DataInput.get_password(occupant_filepath, username):
+        return False
+    
+    # user exists and they've entered the correct password
+    # delete their entry from the occupants CSV
+    DataInput.remove_user(username, occupant_filepath)
+    return True
 
 def log_in_user(username, password, occupant_filepath):
     """Verifies that a username and password are valid and logs in the user attached to those credentials.
     Returns True on a successful log-in attempt, false otherwise
     """
-    # TODO: create a user class so we can keep track of who is logged in
     # this log in function should set that user class to change on a successful attempt
     # first verify if the username is a valid username
     if not verify_user_exists(username, occupant_filepath):
@@ -51,8 +64,7 @@ def log_in_user(username, password, occupant_filepath):
     if expected_password != password:
         print("Password not valid!")
         return False
-    
-    # TODO: interact with frontend and chore system here to actually log this person in
+
     return True
     
 
