@@ -58,6 +58,7 @@ function ChoreList(props) {
                 <div key={chore["Chore ID"]} className="chore-card">
                     <h1>{chore["Chore Name"]}</h1>
                     <div className="chore-description">{chore["Description"]}</div>
+                    <div className="chore-deadline">Due {chore["Deadline Date"]}</div>
                     <button onClick={() => completeChore(chore["Chore ID"])}>Complete</button>
                 </div>)}
         </div>)}
