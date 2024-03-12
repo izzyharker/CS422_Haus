@@ -174,7 +174,8 @@ def flask_create_chore():
     DataInput.new_chore_by_args(
         name = request.form['Chore Name'],
         desc = request.form['Description'],
-        frequency = request.form['Frequency']
+        frequency = int(request.form['Frequency']),
+        expected_duration = int(request.form['Expected Duration'])
     )
     AutoAssign.assign_unassigned_chores()
 

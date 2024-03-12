@@ -10,7 +10,7 @@ modules can interact with the Household Data Storage database (the CSV files in 
 import json
 import csv
 import uuid
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 
 # enhanced typing
 from typing import Union
@@ -173,15 +173,20 @@ def new_chore_by_args(name: str,
                       desc: str, 
                       id: Union[str, None] = None,
                       category: str = "", 
-                      duration: int = 10, 
+                      expected_duration: int = 10,
                       status: Union[CHORE_STATUS, None] = CHORE_STATUS.UNASSIGNED, 
                       assignee_id: Union[str, None] = None,
-                      deadline_date: Union[date, None] = None,
                       frequency: int = 0,
+                      deadline_date: Union[date, None] = None,
                       completion_date: Union[date, None] = None):
     # If chore doesn't have an id, generate a unique one
     if not id:
         id = generate_uid()
+
+    # If chore doesn't have a deadline, set it to today + frequency
+    if not deadline_date:
+        deadline_date = date.today() + timedelta(days=frequency)
+    deadline_date_text = deadline_date.strftime(DATE_FORMAT)
 
     # read existing chores to check that it does not already exist (based on id)
     with open(CHORES_FILEPATH, 'r') as file:
@@ -195,10 +200,10 @@ def new_chore_by_args(name: str,
             'Chore Name': name,
             'Description': desc,
             'Category': category,
-            'Expected Duration': duration,
+            'Expected Duration': expected_duration,
             'Status': status,
             'Assignee ID': assignee_id,
-            'Deadline Date': deadline_date,
+            'Deadline Date': deadline_date_text,
             'Frequency': frequency,
             'Completion Date': completion_date
     }

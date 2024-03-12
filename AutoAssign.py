@@ -108,7 +108,7 @@ def renew_repeating_chores() -> None:
         DataInput.update_chore_by_object(chore)
         # edit the chore attributes to be used for the new instance
         assert isinstance(chore.completion_date, date)  # Python linter freaks out without this line
-        chore.deadline_date = chore.completion_date + timedelta(days=chore.frequency+1)
+        chore.deadline_date = chore.completion_date + timedelta(days=chore.frequency)
         chore.status = CHORE_STATUS.UNASSIGNED
         chore.assignee_id = None
         chore.completion_date = None
