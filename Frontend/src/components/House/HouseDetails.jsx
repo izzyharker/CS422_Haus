@@ -13,6 +13,7 @@ function HouseDetails(props) {
     const [addChore, showAddChore] = useState(false)
     const [choreName, setChoreName] = useState("")
     const [choreDesc, setChoreDesc] = useState("")
+    const [choreLen, setChoreLen] = useState(15)
     const [freq, setFreq] = useState(3)
 	const [delPass, setDelPass] = useState(false)
     const [errorMessages, setErrorMessages] = useState({})
@@ -32,6 +33,7 @@ function HouseDetails(props) {
 		chore_data.append('Chore Name', choreName)
 		chore_data.append('Description', choreDesc)
         chore_data.append('Frequency', freq)
+        chore_data.append('Expected Duration', choreLen)
 
 		fetch("http://localhost:5000/chore/create", {
 			method: 'POST',
@@ -124,6 +126,17 @@ function HouseDetails(props) {
                                 placeholder="3 days"
                                 optional
                                 onChange={({ target }) => setFreq(target.value)}	
+                            />
+                        </div>
+
+                        <div className="input-container">
+                            <label>Chore length (minutes)</label>
+                            <input 
+                                type="number" 
+                                name="len" 
+                                placeholder="15 minutes"
+                                optional
+                                onChange={({ target }) => setChoreLen(target.value)}	
                             />
                         </div>
                         <div className="button-container">
