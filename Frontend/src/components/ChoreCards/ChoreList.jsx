@@ -22,6 +22,8 @@ function ChoreList(props) {
 			body: chore_info
         })
         setChores(chores.filter((ch) => ch["Chore ID"] != id))
+
+        setTimeout(() => window.location.reload(), 1000)
     }
 
     // fetch the user's chores from the backend
