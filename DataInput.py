@@ -1,5 +1,5 @@
 """
-Author: Carter Young, Alex JPS, Connie Williamson
+Author: Carter Young, Alex JPS, Connie Williamson, Andrew Rehmann
 Date: 02/24/24
 
 This module provides getter and setter functions with which the frontend and the automatic chore assignment
@@ -169,6 +169,43 @@ def new_chore_by_object(chore: Chore) -> None:
         writer.writerows(lines)
 
 
+def new_chore_by_args(name: str,
+                      desc: str, 
+                      id: Union[str, None] = None,
+                      category: str = "", 
+                      duration: int = 10, 
+                      status: Union[CHORE_STATUS, None] = CHORE_STATUS.UNASSIGNED, 
+                      assignee_id: Union[str, None] = None,
+                      deadline_date: Union[date, None] = None,
+                      frequency: int = 0,
+                      completion_date: Union[date, None] = None):
+    # If chore doesn't have an id, generate a unique one
+    if not id:
+        id = generate_uid()
+
+    # read existing chores to check that it does not already exist (based on id)
+    with open(CHORES_FILEPATH, 'r') as file:
+        reader = csv.DictReader(file)
+        lines = list(reader)
+    for line in lines:
+        if line["Chore ID"] == id:
+            raise ValueError("Chore ID already exists in database")
+    csv_row = {
+            'Chore ID': id,
+            'Chore Name': name,
+            'Description': desc,
+            'Category': category,
+            'Expected Duration': duration,
+            'Status': status,
+            'Assignee ID': assignee_id,
+            'Deadline Date': deadline_date,
+            'Frequency': frequency,
+            'Completion Date': completion_date
+    }
+    new_chore = Chore(csv_row)
+    new_chore_by_object(new_chore)
+
+
 def update_chore_by_object(chore: Chore) -> None:
     """
     Given a Chore object, update the CSV database entry to match object's attributes.
@@ -225,6 +262,28 @@ def set_chore_complete(chore_id: str) -> None:
         writer = csv.DictWriter(file, fieldnames=CHORE_ATTRIBUTES)
         writer.writeheader()
         writer.writerows(lines)
+        
+
+def remove_user(username, occupant_filepath):
+    """
+    Remove a user from the occupants CSV. Does not verify if the user exists beforehand.
+    This function does not verify that the deletion is authorized, as that should be left to the login module.
+    """
+    # open the occupants CSV and extract all the info currently there
+    # don't extract the data we're removing
+    current_user_info = []
+    with open(occupant_filepath, mode='r', newline='') as file:
+        reader = csv.reader(file)
+        headers = next(reader)
+        for row in reader:
+            if row[1] != username:  # usernames are stored in the second column. Copy all usernames except the one we're deleting
+                current_user_info.append(row)
+
+    # write all extracted data back in
+    with open(occupant_filepath, mode='w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(headers)
+        writer.writerows(current_user_info)
 
 
 """
@@ -269,6 +328,19 @@ def retrieve_occupants_names_and_uids(OCCUPANTS_FILEPATH) -> dict[str, str]:
         for row in reader:
             occupants[row[0]] = row[1]
     return occupants
+  
+  
+def retrieve_occupant_uid_from_username(username, OCCUPANTS_FILEPATH):
+    """
+    Returns the first instance of a uid matching the input username
+    """
+    with open(OCCUPANTS_FILEPATH, mode='r') as file:
+        reader = csv.reader(file)
+        next(reader)  # Skip the header
+
+        for row in reader:
+            if row[1] == username:
+                return row[0]
 
 
 def get_chore_by_id(id: str):

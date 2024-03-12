@@ -115,3 +115,6 @@ def renew_repeating_chores() -> None:
         chore.id = increment_id(chore.id)
         # add the new chore to the database
         DataInput.new_chore_by_object(chore)
+
+    # assign the renewed chores
+    assign_unassigned_chores()

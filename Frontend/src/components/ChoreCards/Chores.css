@@ -66,6 +66,7 @@ Description: Contains styling information for ChoreContainer.jsx and ChoreList.j
     padding-bottom: 0;
     margin-top: 0;
     height: 20%;
+    font-size: 1.5em;
 }
 
 .chore-card div {

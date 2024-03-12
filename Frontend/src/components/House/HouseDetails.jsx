@@ -13,9 +13,11 @@ function HouseDetails(props) {
     const [addChore, showAddChore] = useState(false)
     const [choreName, setChoreName] = useState("")
     const [choreDesc, setChoreDesc] = useState("")
+    const [choreLen, setChoreLen] = useState(15)
     const [freq, setFreq] = useState(3)
 	const [delPass, setDelPass] = useState(false)
     const [errorMessages, setErrorMessages] = useState({})
+    const [password, setPassword] = useState()
 
     // error message for incorrect password
     const errors = {
@@ -25,7 +27,19 @@ function HouseDetails(props) {
     // handles the submission for the add chore form
     const submitAddChore = (e) => {
         // API post with form data 
+        e.preventDefault()
+        
+		var chore_data = new FormData()
+		chore_data.append('Chore Name', choreName)
+		chore_data.append('Description', choreDesc)
+        chore_data.append('Frequency', freq)
+        chore_data.append('Expected Duration', choreLen)
 
+		fetch("http://localhost:5000/chore/create", {
+			method: 'POST',
+			mode: 'cors',
+			body: chore_data
+		})
         console.log("added chore")
 
         // stop displaying form
@@ -40,23 +54,41 @@ function HouseDetails(props) {
     );
 
     // handles the submission for the delete account form
-    const deleteAccount = (pass) => {
+    const deleteAccount = (e) => {
         // stop displaying form
-		setDelPass(false)
+		// setDelPass(false)
 
-		if (true) {
-			// remove from backend (API)
+        e.preventDefault()
 
-			// remove from browser storage
-			localStorage.removeItem("user")
+        var delete_data = new FormData()
+        delete_data.append('user', localStorage.getItem("user"))
+        delete_data.append('pass', password)
+        console.log(localStorage.getItem("user"), password)
+        fetch("http://localhost:5000/user/delete", {
+			method: 'POST',
+			mode: 'cors',
+			body: delete_data
+        }).then(
+            response => response.json()
+        ).then(
+            data => {
+                console.log(data)
+                if (data.success == true) {
+                    // stop displaying form
+                    setDelPass(false)
 
-            // logout
-			setLogin(false)
-		}
-		else {
-            // set the error message on incorrect password and do nothing
-			setErrorMessages({ name: "pass", message: errors.pass });
-		}
+                    // remove from browser storage
+                    localStorage.removeItem("user");
+                    // logout
+                    props.setLogin(false)
+                }
+                else {
+                    // set the error message on incorrect password and do nothing
+                    // setDelPass(true)
+                    setErrorMessages({ name: "pass", message: errors.pass });
+                }
+            }
+        )
 	}
 
     // form to add a chore to the haus
@@ -94,6 +126,17 @@ function HouseDetails(props) {
                                 placeholder="3 days"
                                 optional
                                 onChange={({ target }) => setFreq(target.value)}	
+                            />
+                        </div>
+
+                        <div className="input-container">
+                            <label>Chore length (minutes)</label>
+                            <input 
+                                type="number" 
+                                name="len" 
+                                placeholder="15 minutes"
+                                optional
+                                onChange={({ target }) => setChoreLen(target.value)}	
                             />
                         </div>
                         <div className="button-container">
