@@ -175,6 +175,7 @@ def flask_create_chore():
         desc = request.form['Description'],
         frequency = request.form['Frequency']
     )
+    AutoAssign.assign_unassigned_chores()
 
     reply['success'] = True
     return jsonify(reply)
