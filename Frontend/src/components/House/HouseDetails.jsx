@@ -112,7 +112,7 @@ function HouseDetails(props) {
                             />
                         </div>
                         <div className="input-container">
-                            <label>Chore description</label>
+                            <label>Brief description of what needs to be done</label>
                             <input 
                                 type="text" 
                                 name="desc" 
@@ -121,7 +121,7 @@ function HouseDetails(props) {
                             />
                         </div>
                         <div className="input-container">
-                            <label>Chore frequency (days)</label>
+                            <label>Days until the chore repeats? (0 for one-time)</label>
                             <input 
                                 type="number" 
                                 name="freq" 
@@ -132,7 +132,7 @@ function HouseDetails(props) {
                         </div>
 
                         <div className="input-container">
-                            <label>Chore length (minutes)</label>
+                            <label>About how long does it take to do this? (minutes)</label>
                             <input 
                                 type="number" 
                                 name="len" 
