@@ -16,6 +16,7 @@ function NavBar(props) {
             <Title title={"HAUS"}/>
             
             <div className="icon-buttons">
+                    <a className="username">{props.user}</a>
                     <HelpButton />
                     {props.renderButtons &&
                     (<Logout setLogin={props.setLogin}/>)}

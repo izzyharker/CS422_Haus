@@ -63,7 +63,7 @@ whiteish: #d7e3d4
     transition: all 0.25s;
     border-radius: 8px;
     padding: 0.2em 0.3em;
-    border: 2px solid transpare t;
+    border: 2px solid transparent;
 }
 
 .help:hover {
@@ -87,4 +87,16 @@ whiteish: #d7e3d4
     border: 2px solid #d7e3d4;
     /* background-color: #8592dd; */
     color: #d7e3d4;
+}
+
+.username {
+    text-decoration: none;
+    color: #d7e3d4;
+    text-align: center;
+    margin: auto;
+    font-size: 1.2em;
+    transition: all 0.25s;
+    border-radius: 8px;
+    padding: 0.2em 0.3em;
+    border: 2px solid transparent;
 }

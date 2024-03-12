@@ -44,6 +44,8 @@ function HouseDetails(props) {
 
         // stop displaying form
         showAddChore(false)
+
+        setTimeout(() => window.location.reload(), 1000)
     }
 
     // display the correct error message, returns a div containing the error

@@ -1,5 +1,5 @@
 """
-Author: Andrew Rehmann
+Author: Andrew Rehmann, Alex JPS
 Date: 03/07/2024
 
 This file contains the flask integration between the frontend and backend
@@ -149,6 +149,7 @@ def flask_complete_chore():
     chore_id = request.form['chore_id']
     DataInput.set_chore_complete(chore_id)
     AutoAssign.renew_repeating_chores()
+    AutoAssign.assign_unassigned_chores()
     
     reply['success'] = True
     return jsonify(reply)
@@ -175,6 +176,7 @@ def flask_create_chore():
         desc = request.form['Description'],
         frequency = request.form['Frequency']
     )
+    AutoAssign.assign_unassigned_chores()
 
     reply['success'] = True
     return jsonify(reply)
