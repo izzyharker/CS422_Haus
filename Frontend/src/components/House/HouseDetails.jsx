@@ -73,14 +73,14 @@ function HouseDetails(props) {
         ).then(
             data => {
                 console.log(data)
-                if (data.success) {
+                if (data.success == true) {
                     // stop displaying form
                     setDelPass(false)
 
                     // remove from browser storage
                     localStorage.removeItem("user");
                     // logout
-                    setLogin(false)
+                    props.setLogin(false)
                 }
                 else {
                     // set the error message on incorrect password and do nothing

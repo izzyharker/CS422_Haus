@@ -25,7 +25,7 @@ function HouseContainer(props) {
     // pass the user data and the title. 
     return (
         <div className="house">
-            <HouseDetails houseName="Haus Information" houseData={data}/>
+            <HouseDetails houseName="Haus Information" houseData={data} setLogin={props.setLogin}/>
         </div>
     )
 }

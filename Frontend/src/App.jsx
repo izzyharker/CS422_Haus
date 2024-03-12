@@ -175,6 +175,7 @@ function App() {
 
 	// checks whether there is a logged-in user on reload or page opening
 	useEffect(() => {
+		setCreate(false);
 		const loggedInUser = localStorage.getItem("user");
 		if (loggedInUser) {
 			setUser(loggedInUser);
@@ -192,7 +193,7 @@ function App() {
 		{(isLoggedIn) ? <>
 				<div className="haus-content">
 					<ChoreContainer user={user}/>
-					<HouseContainer user={user}/>
+					<HouseContainer user={user} setLogin={setLogin}/>
 				</div> 
 			</>: (create) ? createAcctForm : loginForm}
 		</div>
