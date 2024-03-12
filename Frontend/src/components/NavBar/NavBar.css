@@ -99,4 +99,5 @@ whiteish: #d7e3d4
     border-radius: 8px;
     padding: 0.2em 0.3em;
     border: 2px solid transparent;
+    font-weight: bold;
 }
