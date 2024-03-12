@@ -40,7 +40,6 @@ def flask_login_user():
         JSON reply with 'user_exists', 'pass_valid', and 'userid' parameters
         user_exists: False if the user doesn't exist, True if the user does exist.
         pass_valid: True if the password matches the user's, False otherwise.
-        user_id: The user's ID on a successful login attempt, '' otherwise
     """
     reply = {
         'user_exists': False,
@@ -241,15 +240,10 @@ def flask_assign_chores():
         AutoAssign.assign_unassigned_chores()
         return jsonify(reply)
 
-
-@app.route('/')
-def serve():
-    return send_from_directory(app.static_folder, 'index.html')
-
-# {fetch('http://localhost:5000/api/data')
-#             .then(response => response.json())
-#             .then(data => console.log(data))
-#             }
+# Occasionally used in prod environments when you want Flask to serve your React
+# @app.route('/')
+# def serve():
+#     return send_from_directory(app.static_folder, 'index.html')
 
 
 if __name__ == '__main__':
