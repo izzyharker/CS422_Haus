@@ -4,6 +4,10 @@ Date: 03/3/2024
 
 This file represents the tests for the log in module. 
 """
+
+# fix import path
+import Context
+
 import unittest
 import os
 import csv
