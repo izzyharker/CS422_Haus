@@ -30,8 +30,12 @@ This software runs on both Python and JavaScript, with local servers for both en
 4. Download and install Node 20.11.1 from https://nodejs.org/en. At the moment, this is the LTS version of the software. 
 
 5. Navigate to the "CS422_Haus/Frontend/" directory of the project. Run the command 
-npm install
-to install the required React dependencies for the project.
+
+```npm install```
+
+to install the required React dependencies for the project. The exact dependencies are listed in `Frontend/package-lock.json`. 
+
+All other dependencies are part of the Python standards library and do not need to be installed separately. 
 
 ## Running
 1) In a terminal window, navigate to the main directory of the project:
