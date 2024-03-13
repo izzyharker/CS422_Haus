@@ -51,7 +51,7 @@ def assign_chore(chore: Chore, assignee_id: str) -> None:
     # Update the database using DataInput
     DataInput.update_chore_by_object(chore)
 
-def user_workload(user_id: str):
+def user_workload(user_id: str) -> int:
     """
     Calculate the workload of a given user within the past seven and next seven days.
     This is entirely based off of the work they are supposed to do, regardless of whether they have done it.

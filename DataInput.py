@@ -132,7 +132,7 @@ Setter Functions
 """
 
 
-def add_occupant_name(filename, occupant_uid, occupant_username, occupant_password):
+def add_occupant_name(filename: str, occupant_uid: str, occupant_username: str, occupant_password: str) -> bool:
     """Adds a username and password to the occupants CSV file. Also generates a UID for the new user.
     Note: does not verify if this name already exists. That functionality is covered in the login.py module
     as this module is strictly concerned with passing data."""
@@ -178,7 +178,10 @@ def new_chore_by_args(name: str,
                       assignee_id: Union[str, None] = None,
                       frequency: int = 0,
                       deadline_date: Union[date, None] = None,
-                      completion_date: Union[date, None] = None):
+                      completion_date: Union[date, None] = None) -> None:
+    """
+    Adds a new chore to the CSV database with the given attributes.
+    """
     # If chore doesn't have an id, generate a unique one
     if not id:
         id = generate_uid()
@@ -269,7 +272,7 @@ def set_chore_complete(chore_id: str) -> None:
         writer.writerows(lines)
         
 
-def remove_user(username, occupant_filepath):
+def remove_user(username: str, occupant_filepath: str) -> None:
     """
     Remove a user from the occupants CSV. Does not verify if the user exists beforehand.
     This function does not verify that the deletion is authorized, as that should be left to the login module.
@@ -296,8 +299,10 @@ Getter Functions
 """
 
 
-def get_username_list(filename):
-    """Returns the list of usernames stored in the occupants CSV file"""
+def get_username_list(filename: str) -> list[str]:
+    """
+    Returns the list of usernames stored in the occupants CSV file
+    """
     current_usernames = []
     with open(filename, mode='r', newline='') as file:
         reader = csv.reader(file)
@@ -310,8 +315,10 @@ def get_username_list(filename):
     return current_usernames
 
 
-def get_password(filename, username):
-    """Returns the password for a given username from the occupants CSV file"""
+def get_password(filename: str, username: str) -> str:
+    """
+    Returns the password for a given username from the occupants CSV file
+    """
     with open(filename, mode='r', newline='') as file:
         reader = csv.reader(file)
         for row in reader:
@@ -321,7 +328,7 @@ def get_password(filename, username):
     # username isn't valid, so return nothing
 
 
-def retrieve_occupants_names_and_uids(OCCUPANTS_FILEPATH) -> dict[str, str]:
+def retrieve_occupants_names_and_uids(OCCUPANTS_FILEPATH: str) -> dict[str, str]:
     """
     Return a dictionary object mapping occupant IDs to their names.
     """
@@ -335,7 +342,7 @@ def retrieve_occupants_names_and_uids(OCCUPANTS_FILEPATH) -> dict[str, str]:
     return occupants
   
   
-def retrieve_occupant_uid_from_username(username, OCCUPANTS_FILEPATH):
+def retrieve_occupant_uid_from_username(username: str, OCCUPANTS_FILEPATH: str) -> str:
     """
     Returns the first instance of a uid matching the input username
     """
@@ -348,7 +355,7 @@ def retrieve_occupant_uid_from_username(username, OCCUPANTS_FILEPATH):
                 return row[0]
 
 
-def get_chore_by_id(id: str):
+def get_chore_by_id(id: str) -> Chore:
     """
     Return a Chore object from database by id
     """
@@ -423,7 +430,7 @@ def generate_uid() -> str:
     return str(uuid.uuid4())
 
 
-def ensure_csv_headers(filename: str, headers: list[str]):
+def ensure_csv_headers(filename: str, headers: list[str]) -> None:
     """
     Ensures that the CSV file at filename contains the headers specified in the headers list.
     """
