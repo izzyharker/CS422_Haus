@@ -59,28 +59,6 @@ function App() {
                 }
             }
         )
-		// this will be the fetch method
-		// const userData = database.find((user) => user.username === username);
-
-		// if (userData) {
-		// 	if (userData.password !== password) {
-		// 		// Invalid password
-		// 		setErrorMessages({ name: "pass", message: errors.pass });
-		// 	} 
-		// 	else {
-		// 		setLogin(true);
-		// 	}
-		// 	} 
-		// else {
-		// 	// Username not found
-		// 	setErrorMessages({ name: "uname", message: errors.uname });
-		// }
-
-		// set login to true
-		// setLogin(true)
-
-		// update browser storage to the current user
-		// localStorage.setItem("user", "default")
     }
 
 	// display the correct error messages
@@ -209,6 +187,8 @@ function App() {
 				</div> 
 			</>: (create) ? createAcctForm : loginForm}
 		</div>
+
+		<div className="credits">Created for CS 422, Winter 2024 by Izzy Harker, Andrew Rehmann, Alex Peterson Santos, Connie Williamson, Carter Young</div>
 		</>
 	)
 }

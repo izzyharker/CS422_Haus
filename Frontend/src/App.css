@@ -107,3 +107,13 @@ input[type="submit"]:hover {
 .new-acct {
   margin-top: 0.5em;
 }
+
+.credits {
+  position: absolute;
+  bottom: 0;
+  text-align: center;
+  width: 100%;
+  font-size: 0.7em;
+  padding-bottom: 1%;
+  color: #202020;
+}
